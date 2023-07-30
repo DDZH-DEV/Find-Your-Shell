@@ -1,0 +1,29 @@
+# .air.toml
+
+# 文件的监视和热加载选项
+[build]
+  # 监视的目录（默认为 "." 即项目根目录）
+  dir = "."
+  
+  # 需要忽略监视的目录（可选）
+  exclude_dir = ["public", "front"]
+  
+  # 需要忽略监视的文件（可选）
+  exclude_ext = ["log", "tmp"]
+  
+  # 需要监视的文件扩展名（可选）
+  include_ext = ["go", "tmpl", "html"]
+  
+  # 监视周期（默认为 200ms）
+  delay = 200
+  
+# 运行时配置
+[run]
+  # Air 的命令（默认为 Go 命令，可以根据需求调整）
+  cmd = "go run main.go"
+  
+  # 使用控制台的日志输出（默认为 true）
+  log = true
+  
+  # 运行时环境变量（可选）
+  # env = ["ENV=development", "PORT=8080"]

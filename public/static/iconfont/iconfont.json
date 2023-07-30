@@ -1,0 +1,226 @@
+{
+  "id": "4180697",
+  "name": "shell",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "1167132",
+      "name": "本地上传",
+      "font_class": "up",
+      "unicode": "e616",
+      "unicode_decimal": 58902
+    },
+    {
+      "icon_id": "2729098",
+      "name": "上传",
+      "font_class": "upload",
+      "unicode": "e623",
+      "unicode_decimal": 58915
+    },
+    {
+      "icon_id": "4735355",
+      "name": "icon_论坛-线",
+      "font_class": "shequ",
+      "unicode": "e656",
+      "unicode_decimal": 58966
+    },
+    {
+      "icon_id": "8358886",
+      "name": "打赏2",
+      "font_class": "shang",
+      "unicode": "e692",
+      "unicode_decimal": 59026
+    },
+    {
+      "icon_id": "24268569",
+      "name": "视频教程-线型",
+      "font_class": "jc",
+      "unicode": "e6ee",
+      "unicode_decimal": 59118
+    },
+    {
+      "icon_id": "2023693",
+      "name": "首页-首页",
+      "font_class": "home",
+      "unicode": "e638",
+      "unicode_decimal": 58936
+    },
+    {
+      "icon_id": "5967833",
+      "name": "qq2",
+      "font_class": "qq",
+      "unicode": "e680",
+      "unicode_decimal": 59008
+    },
+    {
+      "icon_id": "15933094",
+      "name": "微信",
+      "font_class": "weixin",
+      "unicode": "e607",
+      "unicode_decimal": 58887
+    },
+    {
+      "icon_id": "11806560",
+      "name": "服务器",
+      "font_class": "fuwuqi",
+      "unicode": "e678",
+      "unicode_decimal": 59000
+    },
+    {
+      "icon_id": "12579295",
+      "name": "github",
+      "font_class": "github",
+      "unicode": "e72a",
+      "unicode_decimal": 59178
+    },
+    {
+      "icon_id": "33734076",
+      "name": "沟通训练",
+      "font_class": "contact",
+      "unicode": "e8f5",
+      "unicode_decimal": 59637
+    },
+    {
+      "icon_id": "2380650",
+      "name": "列表",
+      "font_class": "list",
+      "unicode": "e615",
+      "unicode_decimal": 58901
+    },
+    {
+      "icon_id": "5961366",
+      "name": "列表",
+      "font_class": "category",
+      "unicode": "ec6b",
+      "unicode_decimal": 60523
+    },
+    {
+      "icon_id": "1790443",
+      "name": "自动执行",
+      "font_class": "run",
+      "unicode": "e6e3",
+      "unicode_decimal": 59107
+    },
+    {
+      "icon_id": "6322712",
+      "name": "筛选",
+      "font_class": "filter",
+      "unicode": "e621",
+      "unicode_decimal": 58913
+    },
+    {
+      "icon_id": "11195043",
+      "name": "文件夹",
+      "font_class": "dir",
+      "unicode": "e661",
+      "unicode_decimal": 58977
+    },
+    {
+      "icon_id": "12134638",
+      "name": "平台须知",
+      "font_class": "book",
+      "unicode": "e61f",
+      "unicode_decimal": 58911
+    },
+    {
+      "icon_id": "34649511",
+      "name": "研发平台",
+      "font_class": "code",
+      "unicode": "e66e",
+      "unicode_decimal": 58990
+    },
+    {
+      "icon_id": "122694",
+      "name": "delete",
+      "font_class": "delete",
+      "unicode": "e69d",
+      "unicode_decimal": 59037
+    },
+    {
+      "icon_id": "122695",
+      "name": "edit",
+      "font_class": "edit",
+      "unicode": "e69e",
+      "unicode_decimal": 59038
+    },
+    {
+      "icon_id": "122707",
+      "name": "refresh",
+      "font_class": "refresh",
+      "unicode": "e6aa",
+      "unicode_decimal": 59050
+    },
+    {
+      "icon_id": "122711",
+      "name": "set",
+      "font_class": "set",
+      "unicode": "e6ae",
+      "unicode_decimal": 59054
+    },
+    {
+      "icon_id": "122717",
+      "name": "ViewGallery",
+      "font_class": "menu",
+      "unicode": "e6b4",
+      "unicode_decimal": 59060
+    },
+    {
+      "icon_id": "122721",
+      "name": "account",
+      "font_class": "account",
+      "unicode": "e6b8",
+      "unicode_decimal": 59064
+    },
+    {
+      "icon_id": "240305",
+      "name": "link",
+      "font_class": "link",
+      "unicode": "e6f7",
+      "unicode_decimal": 59127
+    },
+    {
+      "icon_id": "21053717",
+      "name": "漏洞扫描",
+      "font_class": "debug",
+      "unicode": "e679",
+      "unicode_decimal": 59001
+    },
+    {
+      "icon_id": "32430833",
+      "name": "导航-01",
+      "font_class": "share",
+      "unicode": "e610",
+      "unicode_decimal": 58896
+    },
+    {
+      "icon_id": "32435872",
+      "name": "设置",
+      "font_class": "shezhi",
+      "unicode": "e612",
+      "unicode_decimal": 58898
+    },
+    {
+      "icon_id": "36442543",
+      "name": "下载-01",
+      "font_class": "down",
+      "unicode": "e613",
+      "unicode_decimal": 58899
+    },
+    {
+      "icon_id": "36442546",
+      "name": "折叠-01",
+      "font_class": "zd",
+      "unicode": "e611",
+      "unicode_decimal": 58897
+    },
+    {
+      "icon_id": "36442558",
+      "name": "退出全屏-01",
+      "font_class": "full-screen",
+      "unicode": "e614",
+      "unicode_decimal": 58900
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+.idea/
+front/node_modules/
+*.scss
+*.map
+tmp/
+front/
+go.sum
+last_scan.json
