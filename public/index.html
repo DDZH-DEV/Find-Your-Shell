@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Find-Your-Shell 后门查杀工具</title>
     <link rel="stylesheet" href="//qidian.gtimg.com/lulu/theme/peak/css/common/ui.css"/>
+    <link href="https://cdn.bootcdn.net/ajax/libs/video.js/8.3.0/alt/video-js-cdn.min.css" rel="stylesheet">
     <link rel="stylesheet" href="./static/iconfont/iconfont.css">
     <link rel="stylesheet" href="./static/css/app.css">
 </head>
@@ -38,16 +39,16 @@
                     <a :href="app.GITHUB_URL" target="github"><i class="iconfont icon-github"></i><b>github</b></a>
                 </li>
 
-                <li>
-                    <a  :href="app.GITHUB_URL" target="github"><i class="iconfont icon-jc"></i><b>教程</b></a>
+                <li x-show="app.VIDEO_URL">
+                    <span @click="now_show='videos';loadVideos()"><i class="iconfont icon-jc"></i><b>教程</b></span>
+                </li>
+
+                <li x-show="app.PLATFORM">
+                    <a :href="app.PLATFORM" target="github"><i class="iconfont icon-shequ"></i><b>社区</b></a>
                 </li>
 
                 <li>
-                    <a  :href="app.GITHUB_URL" target="github"><i class="iconfont icon-shequ"></i><b>社区</b></a>
-                </li>
-
-                <li>
-                    <a :href="app.CONTACT_URL" target="github"><i class="iconfont icon-contact"></i><b>有偿求助</b></a>
+                    <a :href="app.CONTACT_URL"><i class="iconfont icon-contact"></i><b>求助</b></a>
                 </li>
 
                 <li>
@@ -110,33 +111,54 @@
                 <i class="iconfont icon-filter"></i> 点击加载文件</span>
             </p>
 
-                <ol id="home-notice">
-                    <li class="text">选择左边的文件夹,然后点击加载文件进行开始查杀</li>
-                    <li class="text">默认规则都是基于对PHP的查杀,可以自定义添加规则对指定后缀文件查杀</li>
-                    <li class="text">查不出来是因为后门变种代码千奇百怪,没有规则能匹配中代码</li>
-                    <li class="text">注:查杀出来的结果只是恰好能匹配中规则,但是不是后门需要进一步分析代码</li>
-                </ol>
+            <ol id="home-notice">
+                <li class="text">选择左边的文件夹,然后点击加载文件进行开始查杀</li>
+                <li class="text">默认规则都是基于对PHP的查杀,可以自定义添加规则对指定后缀文件查杀</li>
+                <li class="text">查不出来是因为后门变种代码千奇百怪,没有规则能匹配中代码</li>
+                <li class="text">注:查杀出来的结果只是恰好能匹配中规则,但是不是后门需要进一步分析代码</li>
+            </ol>
+
+            <div id="quiker-dirs">
+                <p class="text">您配置的快速访问文件夹目录,可以在配置中修改</p>
+
+                <p>
+                    <template x-for="(qd,qd_index) in quick_dirs">
+                        <button @click="setPath(qd)" class="ui-button ui-button ui-button-success small-btn"
+                                x-text="qd_index+':'+qd"></button>
+                    </template>
+                </p>
+
+            </div>
         </div>
 
-        <script type="text/html" id="file-list-tpl">
-            {{~it :file:index}}
-            <li class="file level-{{=file.Level}} {{=app.inShellFiles(file.File)}}" id="file-{{=index}}">
-                <span class="num">{{=index+1}}</span>
-                <span class="name tips" title="{{=file.File}}"
-                      onclick=app.code('{{=util.getEncode64(file['File'])}}','{{=util.getEncode64(file.Match)}}',{{=index}})><i
-                        class="text">文件:</i> <b>{{=file.File}}</b></span>
-                <span class="size"><i class="text">大小:</i><b>{{=util.formatSize(file.Size)}}</b></span>
-                <span class="match tips" x-show="show_type==='shell'"
-                      onclick=app.showRule('{{=util.getEncode64(file['Match'])}}',true)
-                      title="{{=file.Remark}}"><i class="text">规则:</i><b>{{=file.Match}} </b></span>
-                <span class="time  {{=app.show_type}} "><i class="text">日期:</i> <b>{{=util.formatDate(file.Time,'yyyy-MM-dd hh:mm:ss',true)}}</b></span>
-            </li>
-            {{~}}
-        </script>
+
         <ul class="files" id="show-files" x-show="hash_ls">
 
         </ul>
     </div>
+
+    <div id="video-list" x-show="now_show=='videos'" style="display: none">
+        <ul>
+            <template x-for="(video, v_index) in videos" :key="v_index">
+                <li @click="play(video);">  <i class="iconfont icon-run"></i><h3 x-text="video.name"></h3></li>
+            </template>
+        </ul>
+    </div>
+
+    <div id="video" style="display: none">
+        <video id="player" class="video-js" controls preload="auto" data-setup='{}'>
+            <source src="https://www.w3schools.com/html/movie.mp4" type="video/mp4">
+            </source>
+            <p class="vjs-no-js">
+                您的浏览器不支持使用
+                <a href="https://videojs.com/html5-video-support/" target="_blank">
+                    HTML5
+                </a>
+                播放视频,请升级您的浏览器后进行观看
+            </p>
+        </video>
+    </div>
+
 
     <div id="rule-list" x-show="now_show=='rules'" style="display: none">
         <div class="li-nav">
@@ -222,8 +244,7 @@
     </div>
 
     <div id="join-rule" style="display:none;">
-        <div class="ui-textarea"><span class="text">规则</span><textarea rows="4" id="rule" x-model="match_rule"
-                                                                         placeholder="这里填写规则"></textarea></div>
+        <div class="ui-textarea"><span class="text">规则</span><textarea rows="4" id="rule" x-model="match_rule"  placeholder="这里填写规则"></textarea></div>
         <div class="radios">
             <span class="text">文件类型</span>
 
@@ -243,8 +264,7 @@
         <div class="ui-textarea"><span class="text">备注</span><textarea rows="4" x-model="rule_remark"
                                                                          placeholder="这里添加备注信息"></textarea>
         </div>
-        <p class="text-right"><span class="ui-botton ui-button ui-button-primary" @click="joinRule()"
-                                    x-text="rule_id?'更新规则':'保存规则'"></span></p>
+        <p class="text-right"><span class="ui-botton ui-button ui-button-primary" @click="joinRule()" x-text="rule_id?'更新规则':'保存规则'"></span></p>
     </div>
 
     <div class="mask">
@@ -257,6 +277,7 @@
                     <span class="ui-button ui-button-primary" @click="saveFile()">保存文件</span>
                     <span class="ui-button ui-button-warning" @click="delFile()">删除文件</span>
                     <span class="ui-button ui-button-success" @click="showJoinWhiteList(false)">加入白名单</span>
+                    <span class="ui-button ui-button-primary" @click="help()">无法判断是不是后门?</span>
                 </div>
                 <div class="search">
                     <div>
@@ -265,8 +286,10 @@
                                x-on:click="search()" x-model="match_rule"
                                x-init="$watch('match_rule', value => search())">
                         <span class="ui-button ui-button-primary" @click="showSaveRule()">保存规则</span>
-                        <span class="ui-button ui-button-primary" @click="searchRule()" title="可以再已有的规则上进行编辑">查找已有规则</span>
-                        <div x-show="rule_remark"><span class="text"></span><i class="text" x-text="rule_remark"></i></div>
+                        <span class="ui-button ui-button-primary" @click="searchRule()"
+                              title="可以再已有的规则上进行编辑">查找类似规则</span>
+                        <div x-show="rule_remark"><span class="text"></span><i class="text" x-text="rule_remark"></i>
+                        </div>
                         <div id="similar-rules">
 
                         </div>

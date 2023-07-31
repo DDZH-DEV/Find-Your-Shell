@@ -6,6 +6,9 @@ body {
   overflow-y: hidden;
   background-color: #2486ff; }
 
+.video-js {
+  min-width: 350px !important; }
+
 .iconfont {
   cursor: pointer; }
 
@@ -118,6 +121,16 @@ h1.title {
   display: inline-block;
   text-align: left; }
 
+#update a {
+  margin: 20px; }
+
+#quiker-dirs {
+  padding-top: 20px; }
+  #quiker-dirs p {
+    margin: 15px 0; }
+    #quiker-dirs p button {
+      margin: 0 10px; }
+
 #editor .CodeMirror {
   height: 500px !important; }
 
@@ -167,6 +180,30 @@ h1.title {
       font-size: .9rem;
       font-weight: normal; }
 
+#video-list {
+  width: 65%;
+  float: right;
+  height: 98%;
+  background-color: #fff;
+  border-radius: 0.2rem; }
+  #video-list li {
+    width: 20%;
+    padding: 2.5%;
+    cursor: pointer;
+    float: left;
+    height: 100px;
+    display: inline-block;
+    color: #9e9e9e;
+    text-align: center; }
+    #video-list li .icon-run {
+      display: block;
+      font-size: 2rem;
+      padding-bottom: 15px; }
+    #video-list li h3 {
+      font-weight: normal;
+      font-size: .8rem;
+      line-height: 1.2; }
+
 #scan-result, #rule-list, #white-list {
   width: 65%;
   float: right;
@@ -212,7 +249,7 @@ h1.title {
 #scan-result .load-notice {
   text-align: center;
   vertical-align: center;
-  padding-top: 100px; }
+  padding-top: 10%; }
 
 #scan-result .notice {
   padding: 10px;

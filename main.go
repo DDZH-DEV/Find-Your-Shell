@@ -3,16 +3,18 @@ package main
 // 导入内置 fmt
 import (
 	"crypto/md5"
+	"embed"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/go-ini/ini"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/logoove/sqlite"
 	"io"
+	"io/fs"
 	"net/http"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"regexp"
 	"runtime"
@@ -114,17 +116,6 @@ func loadRules() {
 				whitePathes = append(whiteHashes, rule.Rule)
 			}
 		}
-	}
-}
-
-// 打开浏览器
-func openBrowse() {
-	url := "http://127.0.0.1:8080"
-	cmd := exec.Command("cmd", "/c", "start", url)
-	err := cmd.Start()
-	if err != nil {
-		fmt.Println("打开浏览器时发生错误：", err)
-		return
 	}
 }
 
@@ -298,14 +289,26 @@ var lastSearchPath string
 var configs []Conf
 var scanResult []FileScanRes
 
+//go:embed  public/*
+var staticFiles embed.FS
+
 func startHttpServer() {
 
 	// 1.创建路由
 	r := gin.Default()
 	// 2.绑定路由规则，执行的函数
 	// gin.Context，封装了request和response
-	//r.LoadHTMLGlob("public/**")
-	//r.Static("static", "./public/")
+	r.LoadHTMLFiles("./public/index.html")
+	//r.Static("/static", "./public/static")
+	//r.StaticFS("/static", http.FS(staticFiles))
+
+	fcss, _ := fs.Sub(staticFiles, "public/static/css")
+	fjs, _ := fs.Sub(staticFiles, "public/static/js")
+	ficonfont, _ := fs.Sub(staticFiles, "public/static/iconfont")
+	r.StaticFS("static/css", http.FS(fcss))
+	r.StaticFS("static/js", http.FS(fjs))
+	r.StaticFS("static/iconfont", http.FS(ficonfont))
+
 	r.Use(func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 		c.Writer.Header().Set("Access-Control-Allow-Headers", "*")
@@ -321,9 +324,15 @@ func startHttpServer() {
 	//捕获异常
 	r.Use(gin.Recovery())
 
+	//r.Any("/static/*filepath", func(c *gin.Context) {
+	//	staticServer := http.FileServer(http.FS(staticFiles))
+	//	staticServer.ServeHTTP(c.Writer, c.Request)
+	//})
+
 	//默认请求
 	r.GET("/", func(c *gin.Context) {
-		//c.HTML(http.StatusOK, "index.html", gin.H{"title": "我是测试", "address": "www.5lmh.com"})
+		fmt.Println("staticFiles", staticFiles)
+		c.HTML(http.StatusOK, "index.html", c)
 	})
 
 	r.POST("/rule", func(c *gin.Context) {
@@ -582,8 +591,37 @@ func startHttpServer() {
 			mjson(200, dirs, "", c)
 
 		} else {
-			mjson(0, "目录不存在", "", c)
+			mjson(0, "", "目录不存在", c)
 		}
+	})
+
+	//扫描目录
+	r.GET("/update", func(c *gin.Context) {
+		resp, err := http.Get("https://gitee.com/DDZH-DEV/Find-Your-Shell/raw/master/update.json")
+		if err != nil {
+			mjson(200, "", err.Error(), c)
+			return
+		}
+		defer resp.Body.Close()
+
+		body, err := io.ReadAll(resp.Body)
+		if err != nil {
+			fmt.Println("Failed to read response body:", err)
+			return
+		}
+
+		if resp.StatusCode != 200 || string(body) == "" {
+			//请求失败
+			mjson(0, "", "", c)
+			return
+		}
+		var res map[string]interface{}
+		err = json.Unmarshal([]byte(string(body)), &res)
+		if err != nil {
+
+		}
+
+		mjson(200, res, "", c)
 	})
 
 	//删除数据
@@ -605,22 +643,22 @@ func startHttpServer() {
 
 	})
 
-	err := r.Run()
-	if err != nil {
-		return
-	}
+	r.Run(":9999")
 
 }
 
+var cfg *ini.File
+
 func main() { // main函数，是程序执行的入口
-
 	db, _ = sqlx.Open("sqlite3", "./conf.db")
-
+	cfg, err := ini.Load("config.ini")
+	if err != nil {
+		fmt.Println(cfg, err.Error())
+		return
+	}
 	//开启全性能
 	numCPU := runtime.NumCPU()
 	runtime.GOMAXPROCS(numCPU - 1)
-
 	loadRules()
 	startHttpServer()
-	//openBrowse()
 }

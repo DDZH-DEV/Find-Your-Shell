@@ -4,6 +4,7 @@ go 1.20
 
 require (
 	github.com/gin-gonic/gin v1.9.1
+	github.com/go-ini/ini v1.67.0
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/logoove/sqlite v1.15.3
 )
