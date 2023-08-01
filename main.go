@@ -3,7 +3,6 @@ package main
 // 导入内置 fmt
 import (
 	"crypto/md5"
-	"embed"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
@@ -12,7 +11,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	_ "github.com/logoove/sqlite"
 	"io"
-	"io/fs"
+	"net"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -21,6 +20,8 @@ import (
 	"strings"
 	"time"
 )
+
+var VERSION = string("1.0.0")
 
 // GetFileHash 获取文件的Hash
 func GetFileHash(filename string) (string, error) {
@@ -289,25 +290,24 @@ var lastSearchPath string
 var configs []Conf
 var scanResult []FileScanRes
 
-//go:embed  public/*
-var staticFiles embed.FS
-
 func startHttpServer() {
-
+	gin.SetMode(gin.ReleaseMode)
 	// 1.创建路由
 	r := gin.Default()
 	// 2.绑定路由规则，执行的函数
 	// gin.Context，封装了request和response
-	r.LoadHTMLFiles("./public/index.html")
-	//r.Static("/static", "./public/static")
+	if isDir("./public") {
+		r.LoadHTMLFiles("./public/index.html")
+		r.Static("/static", "./public/static")
+	}
 	//r.StaticFS("/static", http.FS(staticFiles))
 
-	fcss, _ := fs.Sub(staticFiles, "public/static/css")
-	fjs, _ := fs.Sub(staticFiles, "public/static/js")
-	ficonfont, _ := fs.Sub(staticFiles, "public/static/iconfont")
-	r.StaticFS("static/css", http.FS(fcss))
-	r.StaticFS("static/js", http.FS(fjs))
-	r.StaticFS("static/iconfont", http.FS(ficonfont))
+	//fcss, _ := fs.Sub(staticFiles, "public/static/css")
+	//fjs, _ := fs.Sub(staticFiles, "public/static/js")
+	//ficonfont, _ := fs.Sub(staticFiles, "public/static/iconfont")
+	//r.StaticFS("static/css", http.FS(fcss))
+	//r.StaticFS("static/js", http.FS(fjs))
+	//r.StaticFS("static/iconfont", http.FS(ficonfont))
 
 	r.Use(func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
@@ -331,8 +331,16 @@ func startHttpServer() {
 
 	//默认请求
 	r.GET("/", func(c *gin.Context) {
-		fmt.Println("staticFiles", staticFiles)
-		c.HTML(http.StatusOK, "index.html", c)
+		if isDir("./public") {
+			c.HTML(http.StatusOK, "index.html", c)
+		} else {
+			c.Header("Content-Type", "text/html; charset=utf-8")
+			c.String(200, "<h1>Find-Your-Shell V"+VERSION+"</h1>"+
+				"<p>开源地址 : <a href='https://gitee.com/DDZH-DEV/Find-Your-Shell' target='_blank'>Gitee</a></p>"+
+				"<p>一般情况下,只需将执行文件和conf.db拷贝到对应得系统启动即可,文件夹 public 下得文件可以放置任意服务器网址下访问,只要填写对应得API地址即可</p>")
+
+		}
+
 	})
 
 	r.POST("/rule", func(c *gin.Context) {
@@ -643,22 +651,54 @@ func startHttpServer() {
 
 	})
 
-	r.Run(":9999")
+	r.Run(":" + port)
 
 }
 
 var cfg *ini.File
+var port string
+
+func ips() {
+	ifaces, err := net.Interfaces()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	for _, iface := range ifaces {
+		addrs, err := iface.Addrs()
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+
+		for _, addr := range addrs {
+			ipnet, ok := addr.(*net.IPNet)
+			if ok && !ipnet.IP.IsLoopback() && ipnet.IP.To4() != nil {
+				fmt.Println("API:http://" + ipnet.IP.String() + ":" + port)
+			}
+		}
+	}
+}
 
 func main() { // main函数，是程序执行的入口
 	db, _ = sqlx.Open("sqlite3", "./conf.db")
 	cfg, err := ini.Load("config.ini")
+
 	if err != nil {
 		fmt.Println(cfg, err.Error())
-		return
+		port = "9999"
+	} else {
+		port = cfg.Section("http").Key("port").String()
+		if len(port) == 0 {
+			port = "9999"
+		}
 	}
+
 	//开启全性能
 	numCPU := runtime.NumCPU()
 	runtime.GOMAXPROCS(numCPU - 1)
+	ips()
 	loadRules()
 	startHttpServer()
 }
