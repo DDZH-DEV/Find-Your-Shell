@@ -26,8 +26,6 @@
 ![编辑规则](/demos/edit-rule.jpg) 
 ![更改服务器API](/demos/change-server.jpg)
 ***
-## 捐赠与支持
-![支持作者](/demos/qrcode.jpg)
-- 无论你打赏多少，有问题都可以来群里联系我
+## 捐赠与支持  
 [规则讨论交流QQ群](https://jq.qq.com/?_wv=1027&k=5r3f8q0)
 
