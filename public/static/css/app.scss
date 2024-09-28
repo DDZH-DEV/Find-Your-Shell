@@ -1,0 +1,644 @@
+$left-width: 30%;
+$bg-color: #fff;
+$bg-color-body: #2486ff;
+$solid-color: #e1e1e1;
+$shell-color: #ffb430;
+$gray:#696969;
+
+html,
+body {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow-y: hidden;
+    background-color: $bg-color-body;
+}
+
+.video-js{
+    min-width: 350px !important;
+}
+
+.iconfont {
+    cursor: pointer;
+}
+
+.dn {
+    //opacity: 0;
+    //visibility: hidden;
+}
+
+ul {
+    list-style: none;
+}
+
+a{
+    text-decoration: none;
+    color: $gray;
+}
+
+::selection {
+    background-color: red;
+    color: #FFF;
+}
+
+.text-right {
+    text-align: right !important;
+}
+
+
+
+.text {
+    color: #9e9e9e;
+    font-size: 0.8rem;
+}
+
+h1.title {
+    color: #FFF;
+    font-size: 1.5rem;
+    text-align: center;
+    text-transform: uppercase;
+
+    .version {
+        font-size: 1rem;
+        font-style: italic;
+
+        b {
+            font-size: 0.8rem;
+        }
+    }
+}
+
+.small-btn {
+    padding: 3px 10px;
+    font-size: 0.8rem;
+    display: inline-block;
+}
+
+// 美化滚动条
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+
+::-webkit-scrollbar-track {
+    width: 6px;
+    background: rgba(#101f1c, 0.1);
+    -webkit-border-radius: 2em;
+    -moz-border-radius: 2em;
+    border-radius: 2em;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: rgba(144, 147, 153, 0.5);
+    background-clip: padding-box;
+    min-height: 28px;
+    -webkit-border-radius: 2em;
+    -moz-border-radius: 2em;
+    border-radius: 2em;
+    transition: background-color 0.2s;
+    cursor: pointer;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(144, 147, 153, 0.3);
+}
+
+.color-red {
+    background-color: red !important;
+
+    span {
+        color: #fff !important;
+    }
+}
+
+* {
+    margin-left: 0;
+    margin-block-start: 0;
+    padding-inline-start: 0;
+    margin-block-end: 0;
+}
+
+#CodeMirror-search-field {
+    width: auto !important;
+    min-width: 50%;
+}
+
+.cm-searching {
+    background-color: rgba(255, 0, 0, 0.4) !important;
+    color: #fff !important;
+}
+
+.cm-searching::selection {
+    background-color: red !important;
+}
+
+.container {
+    padding: 1%;
+    height: 98%;
+}
+
+.ui-dialog-body {
+    // padding: 0 !important;
+}
+
+.ui-tips[data-title]::before {
+    max-width: 1000px !important;
+}
+
+.mask {
+    position: absolute;
+    left: -100%;
+    top: -100%;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+#shang{
+    max-width: 350px;
+    img{
+        width: 100%;
+        padding: 30px 0;
+    }
+    p{
+        margin-top: 10px;
+    }
+}
+
+#home-notice{
+    margin-top: 30px;
+    max-width: 500px;
+    display: inline-block;
+    text-align: left;
+}
+
+#update{
+    a{
+        margin: 20px;
+    }
+}
+
+#quiker-dirs{
+    padding-top: 20px;
+    p{
+        margin: 15px 0;
+        button{
+            margin: 0 10px;
+        }
+    }
+}
+
+#editor {
+    .CodeMirror {
+        height: 500px !important;
+    }
+
+    .actions {
+        padding: 20px 0;
+
+        div {
+            margin-bottom: 10px;
+        }
+    }
+    .rule_remark{
+        padding-left: 50px;
+    }
+    #similar-rules{
+        padding-top: 10px;
+
+        span{
+            margin-right: 15px;
+        }
+    }
+
+    input {
+        width: 350px;
+
+    }
+}
+
+#config{
+    p{
+        margin-bottom: 10px;
+    }
+
+    textarea{
+        min-width: 340px;
+    }
+
+    .text-right{
+        margin-top: 10px;
+    }
+}
+#config-list{
+     width: 65%;
+    float: right;
+    background-color: $bg-color;
+    border-radius: 0.2rem;
+    &:nth-child(2n){
+        background-color: #FFF;
+    }
+    li{
+        boder:1px solid $solid-color;
+        padding: 30px 0;
+        cursor: pointer;
+
+        width: 50%;
+        float: left;
+        height: 30px;
+        text-align: center;
+        vertical-align: center;
+        display: inline-block;
+        b{
+            font-size: .9rem;
+        font-weight: normal;
+        }
+    }
+}
+#video-list{
+     width: 65%;
+    float: right;
+    height: 98%;
+    background-color: $bg-color;
+    border-radius: 0.2rem;
+    li{
+        width: 20%;
+        padding: 2.5%;
+        cursor: pointer;
+        float: left;
+        height: 100px;
+        display: inline-block;
+        color: #9e9e9e;
+        text-align: center;
+        .icon-run{
+            display: block;
+            font-size: 2rem;
+           padding-bottom: 15px;
+        }
+        h3{
+            font-weight: normal;
+            font-size: .8rem;
+            line-height: 1.2;
+        }
+    }
+} 
+#scan-result, #rule-list, #white-list {
+    width: 65%;
+    float: right;
+    height: 98%;
+    background-color: $bg-color;
+    border-radius: 0.2rem;
+    .li-nav{
+        background-color: #f8f8f8; 
+    }
+
+    li, .li-nav {
+        border-bottom: 1px dashed $solid-color;
+
+        padding: 10px 0;
+        @extend .text;
+
+        span {
+            display: inline-block;
+
+            &.id {
+                width: 55px;
+                text-align: right;
+            }
+
+            overflow: hidden;
+
+            &.name {
+                width: 50%; 
+                word-break: break-all;
+                cursor: pointer;
+            } 
+
+            &.rule{
+                height: 1rem;
+            }
+
+            &.remark {
+                width: 30%;
+            }
+
+            b.lang, b.level {
+                background-color: #9e9e9e;
+                width: 60px;
+                color: #FFF;
+                margin: 0 10px;
+                padding: 2px 5px;
+                text-transform: uppercase;
+            }
+
+
+            &.actions {
+                float: right;
+                margin-right: 20px;
+            }
+        }
+
+
+    }
+
+    ul {
+        list-style: none;
+        height: 92%;
+        overflow-y: auto;
+
+    }
+}
+.file-select{
+    padding: 20px 0;
+}
+//扫描列表
+#scan-result {
+
+    .load-notice {
+        text-align: center;
+        vertical-align: center;
+        padding-top: 10%;
+    }
+
+    .notice {
+        padding: 10px;
+        @extend .text;
+        background-color: #e4e4e4;
+
+        .shells_num, .files_num {
+            padding: 0 5px;
+            cursor: pointer;
+        }
+
+        .shells_num {
+            color: red;
+        }
+    }
+
+    ul.files {
+        li.file {
+            &.level-1 {
+                background-color: #ffecec;
+
+                .name, .match {
+                    b {
+                        color: $shell-color !important;
+                    }
+                }
+            }
+
+            &.level-10 {
+                background-color: #ffc2ae;
+
+                .name, .match {
+                    b {
+                        color: #ff7d52 !important;
+                    }
+                }
+            }
+
+            &.level-100 {
+                background-color: red;
+
+                *, i.text {
+                    color: #FFF;
+                }
+            }
+
+
+            &.shell {
+                .name b {
+                    color: $shell-color;
+                }
+            }
+
+            b,
+            i {
+                font-weight: normal;
+                font-style: normal;
+                font-size: 0.8rem;
+                display: inline-block;
+                float: left;
+            }
+
+            b {
+                text-overflow: ellipsis;
+                display: block;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                line-height: 1.3;
+                white-space: pre-wrap;
+                &.file-path{
+                    font-family: 'Courier New', Courier, monospace; 
+                    width: calc(100% - 65px);
+                }
+            }
+
+            span {
+                display: inline-block;
+            }
+
+            .btns {
+                i {
+                    cursor: pointer;
+                }
+            }
+
+            i.text {
+
+                @extend .text;
+                margin-right: 5px;
+            }
+
+            .name,
+            .match {
+                cursor: pointer; 
+                overflow-x: hidden; 
+                height: 2rem;
+                position: relative;
+            }
+
+            .size {
+                width: 100px; 
+                height: 2rem;
+                float: right;
+                &.shell{
+                    width: 180px; 
+                }
+            }
+
+            .time {
+                width: 160px;
+                height: 2rem;
+
+                b, i {
+                    float: left;
+                }
+                &.shell{
+                    float: right;
+                    width: 180px;
+                }
+            }
+
+            .num {
+                margin-right: 5px;
+                width: 50px;
+                text-align: right;
+                float: left;
+            }
+        }
+    }
+}
+
+
+.menu {
+    background-color: #FFF;
+    height: auto;
+    overflow: hidden;
+    padding: 15px 0;
+    border-radius: 10px;
+    margin-top: 10px;
+
+    li {
+        float: left;
+        margin: 0;
+        padding: 0;
+        display: inline-block;
+        text-align: center;
+        width: 25%;
+        cursor: pointer;
+        margin-top: 20px;
+
+        i,b{
+            display: block;
+        }
+        i {
+            font-size: 2rem;
+        }
+
+        b{
+            padding: 5px 0;
+            font-weight: normal;
+            font-size: 0.8rem;
+            color: $gray;
+        }
+    }
+}
+
+//文件夹列表
+#dir-list {
+
+
+    display: inline-block;
+    margin: 0 auto;
+    width: 25%;
+    max-width: 360px;
+
+    p {
+        color: #fff;
+        font-size: 0.8rem;
+        padding: 5px 0;
+
+        b {
+            color: #ff9f00;
+            padding: 0 5px;
+        }
+    }
+
+    .path {
+        width: 100%;
+        background-color: $bg-color;
+        cursor: pointer !important;
+        margin: 10px 0 10px 0 !important;
+        display: block;
+        padding: 10px 0;
+        text-indent: 5px;
+    }
+
+    .dir, .gotop-dir {
+            cursor: pointer;
+            list-style: none;
+            padding: 15px;
+            text-align: left;
+
+            color: #464646;
+            font-size: 0.8rem;
+        }
+
+    .gotop-dir {
+            background-color: #ff7e00;
+            color: #FFF;
+        }
+
+    #root {
+        width: 100%;
+        height: 70%;
+        max-height: 300px;
+        overflow-y: auto;
+        display: inline-block;
+        background-color: $bg-color;
+        margin-top: 1px;
+
+        .iconfont {
+            margin-right: 10px;
+        }
+
+
+        .dir{
+            border-bottom: 1px dashed $solid-color;
+        }
+
+    }
+}
+
+#server{
+    width: 320px;
+        padding: 10px !important;
+        box-sizing: content-box;
+        cursor: pointer;
+}
+
+#join-white, #join-rule {
+    input, textarea {
+        width: 320px;
+        padding: 10px !important;
+        box-sizing: content-box;
+        cursor: pointer;
+    }
+
+    .radios {
+        margin: 10px 0;
+    }
+
+    label {
+        @extend .text;
+    }
+
+    p {
+        margin: 10px 0;
+        text-align: right;
+    }
+
+    textarea {
+        margin-bottom: 15px;
+    }
+}
+
+#join-rule {
+    p {
+        text-align: left;
+    }
+
+    span.text {
+        display: inline-block;
+        width: 55px;
+        text-align: right;
+        margin-right: 5px;
+    }
+}
+
+
+@import "response";
+
+

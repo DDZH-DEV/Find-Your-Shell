@@ -1,9 +1,7 @@
 .idea/
-front/node_modules/
-*.scss
+front/node_modules/ 
 *.map
-tmp/
-front/
+tmp/ 
 go.sum
 last_scan.json
 *.txt
