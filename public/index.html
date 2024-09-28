@@ -84,7 +84,7 @@
                 <span>
                             <span x-show="hash_ls>0" @click="ls('shell')"> <button
                                     class="ui-button ui-button-success small-btn" id="scan-btn"
-                                    x-text="shells_num>0?'再次查杀':'开始查杀'"></button> <span
+                                    x-text="scan=='shell'?'再次查杀':'开始查杀'"></button> <span
                                     x-show="scaning_time > 0" x-text="scaning_time +'秒'"></span></span>
                             <button class="ui-button ui-button-primary small-btn"
                                     x-show="show_type=='shell' && show.length>0"
@@ -124,7 +124,7 @@
                 <p>
                     <template x-for="(qd,qd_index) in quick_dirs">
                         <button @click="setPath(qd)" class="ui-button ui-button ui-button-success small-btn"
-                                x-text="qd_index+':'+qd"></button>
+                                x-text="qd_index+':'+qd.path"></button>
                     </template>
                 </p>
 
@@ -173,7 +173,7 @@
                      <span class="id">
                          <b x-text="_rule.Id"></b>
                      </span>
-                    <span class="name" @click="showRule(_rule.Rule,true)">
+                    <span class="name rule" @click="showRule(_rule.Rule,true)">
                         <b class="lang" x-text="_rule.Lang"></b>
                          <b :class="'level level-'+_rule.Level" x-text="_rule.Level"></b>
                         <b x-text="_rule.Rule"></b>
