@@ -1,4 +1,4 @@
-module go-shell-scan
+module findshell
 
 go 1.20
 

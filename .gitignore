@@ -5,3 +5,5 @@ tmp/
 go.sum
 last_scan.json
 *.txt
+findshell_linux
+findshell_windows.exe

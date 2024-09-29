@@ -24,7 +24,7 @@ var (
 )
 
 func StartHTTPServer(db *sqlx.DB, port string) {
-	gin.SetMode(gin.DebugMode)
+	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 
 	// 设置中间件

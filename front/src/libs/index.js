@@ -311,10 +311,17 @@ export default {
     path: storage.get("path") || "/",
     path_root: storage.get("path_root") || "/",
     setPath(item) {
-        this.path_root = this.path = item.path.replace("//", "/");
+        let path=typeof item==='string'?item:item.path;
+        this.path_root = this.path = path.replace("//", "/");
         this.hash_ls = false;
         this.now_show = "files";
-        this.select_file_types=item.exts||[];
+
+        var exts=typeof item==='string'?false:(item.exts||[]);
+        console.log('exts',exts);
+        if(exts){
+            this.select_file_types=exts;
+        }
+        
         storage.set('path', this.path);
         storage.set('path_root', this.path);
 
