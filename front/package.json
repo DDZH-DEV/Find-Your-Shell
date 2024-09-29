@@ -10,7 +10,7 @@
     "webpack-obfuscator": "^3.5.1"
   },
   "scripts": {
-    "dev": "webpack-cli --mode production --watch"
+    "dev": "webpack-cli --mode development --watch"
   },
   "dependencies": {
     "alpinejs": "^3.12.3"

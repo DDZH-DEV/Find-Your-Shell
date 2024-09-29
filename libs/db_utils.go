@@ -18,11 +18,13 @@ var (
 // LoadRules 加载DB数据
 func LoadRules(db *sqlx.DB) {
 	db.Select(&Rules, "SELECT id,rule,remark,lang,level,status,official FROM rules ORDER BY id DESC")
-	db.Select(&Whites, "SELECT id,rule,remark,rule_type FROM white_list ORDER BY id DESC")
 	db.Select(&Configs, "SELECT * FROM config")
+
+	db.Select(&Whites, "SELECT id,rule,remark,rule_type FROM white_list ORDER BY id DESC")
 
 	WhiteHashes = []string{}
 	WhitePaths = []string{}
+
 	for _, rule := range Whites {
 		if rule.RuleType == "hash" {
 			WhiteHashes = append(WhiteHashes, rule.Rule)

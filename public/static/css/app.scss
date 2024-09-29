@@ -1,3 +1,61 @@
+$size: (0, 1, 5, 10, 15, 20, 30); 
+
+@each $s in $size {
+    .pd-tb-#{$s} {
+        padding-top: #{$s}px !important;
+        padding-bottom: #{$s}px !important;
+    }
+
+    .mg-tb-#{$s} {
+        margin-top: #{$s}px !important;
+        margin-bottom: #{$s}px !important;
+    }
+
+
+    .pd-lr-#{$s} {
+        padding-left: #{$s}px !important;
+        padding-right: #{$s}px !important;
+    }
+
+    .mg-lr-#{$s} {
+        margin-left: #{$s}px !important;
+        margin-right: #{$s}px !important;
+    }
+
+    .pd-#{$s} {
+        padding: #{$s}px !important;
+    }
+
+
+    .mg-#{$s} {
+        margin: #{$s}px !important;
+    }
+
+}
+
+
+@each $t in ("pd", "mg") {
+
+    $ti: index(("pd", "mg"), $t);
+
+    @each $p in ("t", "b", "l", "r") {
+
+        $i: index(("t", "b", "l", "r"), $p);
+
+        $_PS: nth(("top", "bottom", "left", "right"), $i);
+
+        $tp: nth(("padding", "margin"), $ti);
+
+        @each $s in $size {
+
+            .#{$t}-#{$p}-#{$s} {
+                #{$tp}-#{$_PS}: #{$s}px !important;
+            }
+        }
+    }
+}
+
+
 $left-width: 30%;
 $bg-color: #fff;
 $bg-color-body: #2486ff;
@@ -188,6 +246,19 @@ h1.title {
     }
 }
 
+
+#ignore-rules-box{
+    width: 640px;
+    max-width: 90%;
+    .text{
+        display: inline-block;
+        width: 31%;
+        margin: 0 1% 10px 1%;  
+        white-space: nowrap;
+        overflow: hidden;
+    }
+}
+
 #editor {
     .CodeMirror {
         height: 500px !important;
@@ -295,15 +366,17 @@ h1.title {
     li, .li-nav {
         border-bottom: 1px dashed $solid-color;
 
-        padding: 10px 0;
+        padding: 10px 0 5px 0;
         @extend .text;
 
         span {
             display: inline-block;
 
+
             &.id {
-                width: 55px;
-                text-align: right;
+                width: 50px;
+                text-align: left;
+                padding-left: 10px;
             }
 
             overflow: hidden;
@@ -315,7 +388,7 @@ h1.title {
             } 
 
             &.rule{
-                height: 1rem;
+                height: 1.2rem;
             }
 
             &.remark {
@@ -324,11 +397,14 @@ h1.title {
 
             b.lang, b.level {
                 background-color: #9e9e9e;
-                width: 60px;
+                display: inline-block;
+                text-align: center;
+                width: 40px;
                 color: #FFF;
-                margin: 0 10px;
-                padding: 2px 5px;
+                margin: 0 10px 0 0;
+                padding: 1px 5px;
                 text-transform: uppercase;
+                border-radius: 3px;
             }
 
 
@@ -348,8 +424,11 @@ h1.title {
 
     }
 }
-.file-select{
-    padding: 20px 0;
+.file-select,.path-exclude{
+    padding: 10px 0;
+}
+#load-file{
+    margin-top: 30px;
 }
 //扫描列表
 #scan-result {
@@ -357,7 +436,7 @@ h1.title {
     .load-notice {
         text-align: center;
         vertical-align: center;
-        padding-top: 10%;
+        padding-top: 5%;
     }
 
     .notice {
@@ -415,10 +494,10 @@ h1.title {
             b,
             i {
                 font-weight: normal;
-                font-style: normal;
-                font-size: 0.8rem;
+                font-style: normal; 
                 display: inline-block;
                 float: left;
+                font-size: 0.8rem;
             }
 
             b {
@@ -426,12 +505,12 @@ h1.title {
                 display: block;
                 -webkit-line-clamp: 2;
                 -webkit-box-orient: vertical;
-                overflow: hidden;
-                line-height: 1.3;
+                overflow: hidden; 
                 white-space: pre-wrap;
-                &.file-path{
-                    font-family: 'Courier New', Courier, monospace; 
+                
+                &.file-path{ 
                     width: calc(100% - 65px);
+                    font-weight: bolder;
                 }
             }
 
@@ -483,8 +562,10 @@ h1.title {
 
             .num {
                 margin-right: 5px;
-                width: 50px;
-                text-align: right;
+                width: 40px;
+                text-align: left;
+                padding-left: 10px;
+                font-weight: bolder;
                 float: left;
             }
         }

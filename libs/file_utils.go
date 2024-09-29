@@ -8,6 +8,7 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 // GetFileHash 获取文件的Hash
@@ -30,6 +31,16 @@ func GetFileHash(filename string) (string, error) {
 func InArray(element string, array []string) bool {
 	for _, v := range array {
 		if v == element {
+			return true
+		}
+	}
+	return false
+}
+
+// isPathInWhitelist 检查文件路径是否在白名单中
+func isPathInWhitelist(filePath string, whitePaths []string) bool {
+	for _, whitePath := range whitePaths {
+		if strings.Contains(filePath, whitePath) {
 			return true
 		}
 	}
@@ -67,7 +78,7 @@ func ReadDir(root string) []string {
 }
 
 // Scandir 扫描文件夹下面的文件
-func Scandir(searchDir string, exts []string) []File {
+func Scandir(searchDir string, exts []string, path_exclude []string) []File {
 	if searchDir == "" {
 		searchDir = "/"
 	}
@@ -84,6 +95,14 @@ func Scandir(searchDir string, exts []string) []File {
 		if err != nil {
 			return err
 		}
+
+		// 检查路径是否在排除列表中
+		for _, excludePath := range path_exclude {
+			if strings.Contains(path, filepath.Clean(excludePath)) {
+				return filepath.SkipDir // 直接跳过整个文件夹
+			}
+		}
+
 		if !d.IsDir() {
 			if extMap[filepath.Ext(path)] {
 				info, err := d.Info()

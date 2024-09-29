@@ -54,7 +54,6 @@ func corsMiddleware() gin.HandlerFunc {
 func setupRoutes(r *gin.Engine, db *sqlx.DB) {
 	// 设置静态文件服务
 	if IsDir("./public") {
-		r.LoadHTMLFiles("./public/index.html")
 		r.Static("/static", "./public/static")
 	}
 
@@ -75,7 +74,14 @@ func setupRoutes(r *gin.Engine, db *sqlx.DB) {
 
 func handleIndex(c *gin.Context) {
 	if IsDir("./public") {
-		c.HTML(http.StatusOK, "index.html", nil)
+		// 修改这部分代码
+		content, err := os.ReadFile("./public/index.html")
+		if err != nil {
+			c.String(http.StatusInternalServerError, "无法读取 index.html 文件")
+			return
+		}
+		c.Header("Content-Type", "text/html; charset=utf-8")
+		c.String(http.StatusOK, string(content))
 	} else {
 		c.Header("Content-Type", "text/html; charset=utf-8")
 		c.String(200, "<h1>Find-Your-Shell V"+VERSION+"</h1>"+
@@ -277,6 +283,7 @@ func handleFiles(db *sqlx.DB) gin.HandlerFunc {
 		exts := c.PostFormArray("filter[]")
 		path := c.PostForm("path")
 		scan := c.PostForm("scan")
+		path_exclude := c.PostFormArray("path_exclude[]")
 		fmt.Println(path, "scan exts:", exts)
 
 		if !IsDir(path) {
@@ -284,7 +291,9 @@ func handleFiles(db *sqlx.DB) gin.HandlerFunc {
 			return
 		}
 
-		files := Scandir(path, exts)
+		files := Scandir(path, exts, path_exclude)
+		//打印要扫描的文件
+		fmt.Println("Scan files:", files)
 		ScanResult = []FileScanRes{}
 
 		//在此处把Rules按照lang类型分组
@@ -412,11 +421,14 @@ func MJson(code int, data interface{}, msg interface{}, c *gin.Context) {
 
 func matchFile(file File, langRulesMap map[string][]Rule) *FileScanRes {
 	if len(Whites) > 0 {
+
 		fileHash, err := GetFileHash(file.File)
 		if err == nil && InArray(fileHash, WhiteHashes) {
+			fmt.Println("file hash in white list:", fileHash)
 			return nil
 		}
-		if InArray(file.File, WhitePaths) {
+		if isPathInWhitelist(file.File, WhitePaths) {
+			fmt.Println("file path in white list:", file.File)
 			return nil
 		}
 	}

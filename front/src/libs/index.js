@@ -29,9 +29,7 @@ $(document).on("blur", "#CodeMirror-search-field", function () {
 });
 
 
-export default {
-
-
+export default { 
     match_rule: "",
     file_index: "",
 
@@ -118,6 +116,26 @@ export default {
             }
         );
     },
+    exclude_config:[],
+    path_exclude: [],
+    // 检查路径是否被排除
+    isPathExcluded(path) {
+        return this.path_exclude.includes(path);
+    },
+
+    // 切换路径的排除状态
+    toggleExcludePath(path) {
+        const index = this.path_exclude.indexOf(path);
+        if (index > -1) {
+            // 如果路径已经在排除列表中,则移除它
+            this.path_exclude.splice(index, 1);
+        } else {
+            // 如果路径不在排除列表中,则添加它
+            this.path_exclude.push(path);
+        }
+        // 可以在这里添加保存配置的逻辑,例如:
+        // this.saveConfig();
+    },
 
     files_num: "",
     shells_num: 0,
@@ -140,14 +158,12 @@ export default {
             }, 1000)
         }
 
-        util.ajax("/files", {path: _this.path, scan: scan, filter: this.select_file_types}, (response) => {
+        util.ajax("/files", {path: _this.path,path_exclude:this.path_exclude, scan: scan, filter: this.select_file_types}, (response) => {
 
  
             _this.scaning = false;
             clearInterval(window.scan_time);
-            $('#scan-btn,#load-file').removeClass('loading');
-
-
+            $('#scan-btn,#load-file').removeClass('loading');  
 
             _this.files = response.data.Files ? response.data.Files : [];
             _this.shells = response.data.Shells ? response.data.Shells : [];
@@ -157,20 +173,27 @@ export default {
             console.log('shells', scan,this.shells);
             _this.show_type = scan=='shell' ? 'shell' : 'file';
             // _this.show = scan=='shell' ? _this.shells : _this.files;
-            _this.showfiles(scan=='shell' ? response.data.Shells : response.data.Files)
-            if (_this.shells) {
-                _this.shell_files = [];
-                for (var i in _this.shells) {
-                    _this.shell_files.push(_this.shells[i].File)
-                } 
-                //console.log('shell_files', _this.shell_files);
-            }
-            _this.hash_ls = true;  
+            _this.showfiles(scan=='shell' ? response.data.Shells : response.data.Files) 
 
+            _this.hash_ls = true; 
         });
     },
+    ignoreRules:[],
+    fileRules:[],
     showfiles(files) {
+        // 添加一个忽略规则列表
+        this.ignoreRules = this.ignoreRules || [];
+    
+        // 生成唯一的 file.Match 集合
+        this.fileRules = [...new Set(files.map(file => file.Match).filter(Boolean))];
+    
+        // 过滤文件
+        var filteredFiles = files.filter(file => {
+            return !this.ignoreRules.some(rule => file.Match && file.Match.includes(rule));
+        });
 
+        this.show = filteredFiles;
+    
         var tpl=`{{~it :file:index}}
             <li class="file level-{{=file.Level}} {{=app.inShellFiles(file.File)}}" id="file-{{=index}}">
                 <span class="num">{{=index+1}}</span>
@@ -183,9 +206,33 @@ export default {
                       title="{{=file.Remark}}"><i class="text">规则:</i><b class="file-path">{{=file.Match}} </b></span>
                 <span class="time {{=app.show_type}} "><i class="text">日期:</i> <b>{{=util.formatDate(file.Time,'yyyy-MM-dd hh:mm:ss',true)}}</b></span>
             </li> {{~}}`;
-        var html = doT.template(tpl)(files);
-        //console.log(html,files,document.getElementById('file-list-tpl').innerHTML)
+        var html = doT.template(tpl)(filteredFiles);
         $('#show-files').html(html)
+
+
+        if (this.shells) {
+            var shell_files = [];
+            for (var i in this.shells) {
+                 shell_files.push(this.shells[i].File)
+            } 
+            this.shell_files = shell_files; 
+        }
+
+    },
+    
+    showIgnoreRulesDialog() {
+        window.ignoreRulesDialog = new Dialog({
+            title: "选择忽略规则",
+            content: $("#ignore-rules-dialog").show()
+        });
+    },
+
+    // 更新忽略规则列表
+    updateIgnoreRules(rules) {
+        this.show=this.shells;
+        this.ignoreRules = rules;
+        this.showfiles(this.show); // 重新过滤并显示文件列表
+        window.ignoreRulesDialog.hide();
     },
     // 文件类型选择
     select_file_types: [],
@@ -274,6 +321,10 @@ export default {
                             $('#user-js').remove();
                             $('head').append('<script  id="user-js">' + _this.configs[i]['Value'] + '</script>');
                             break;
+                        case 'path_exclude':
+                            //按换行分割path_exclude
+                            _this.exclude_config= _this.configs[i]['Value'].split("\n");
+                            break;
                         case "quick_dirs":
                             var arr = _this.configs[i]['Value'].split("\n");
                             if (arr) {
@@ -305,8 +356,7 @@ export default {
         this.player= videojs('player');
 
     },
-
-
+ 
     hash_ls: false,
     path: storage.get("path") || "/",
     path_root: storage.get("path_root") || "/",

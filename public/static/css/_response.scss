@@ -84,7 +84,7 @@
 @media only screen and (max-width: 460px) {
   #scan-result ul.files li.file {
     .name, .match {
-      width: 80%;
+      width: calc(100% -60px)
     }
 
     .size, .time {

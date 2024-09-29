@@ -1,3 +1,423 @@
+.pd-tb-0 {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+}
+
+.mg-tb-0 {
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+}
+
+.pd-lr-0 {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
+
+.mg-lr-0 {
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+}
+
+.pd-0 {
+  padding: 0px !important;
+}
+
+.mg-0 {
+  margin: 0px !important;
+}
+
+.pd-tb-1 {
+  padding-top: 1px !important;
+  padding-bottom: 1px !important;
+}
+
+.mg-tb-1 {
+  margin-top: 1px !important;
+  margin-bottom: 1px !important;
+}
+
+.pd-lr-1 {
+  padding-left: 1px !important;
+  padding-right: 1px !important;
+}
+
+.mg-lr-1 {
+  margin-left: 1px !important;
+  margin-right: 1px !important;
+}
+
+.pd-1 {
+  padding: 1px !important;
+}
+
+.mg-1 {
+  margin: 1px !important;
+}
+
+.pd-tb-5 {
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
+}
+
+.mg-tb-5 {
+  margin-top: 5px !important;
+  margin-bottom: 5px !important;
+}
+
+.pd-lr-5 {
+  padding-left: 5px !important;
+  padding-right: 5px !important;
+}
+
+.mg-lr-5 {
+  margin-left: 5px !important;
+  margin-right: 5px !important;
+}
+
+.pd-5 {
+  padding: 5px !important;
+}
+
+.mg-5 {
+  margin: 5px !important;
+}
+
+.pd-tb-10 {
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+}
+
+.mg-tb-10 {
+  margin-top: 10px !important;
+  margin-bottom: 10px !important;
+}
+
+.pd-lr-10 {
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
+
+.mg-lr-10 {
+  margin-left: 10px !important;
+  margin-right: 10px !important;
+}
+
+.pd-10 {
+  padding: 10px !important;
+}
+
+.mg-10 {
+  margin: 10px !important;
+}
+
+.pd-tb-15 {
+  padding-top: 15px !important;
+  padding-bottom: 15px !important;
+}
+
+.mg-tb-15 {
+  margin-top: 15px !important;
+  margin-bottom: 15px !important;
+}
+
+.pd-lr-15 {
+  padding-left: 15px !important;
+  padding-right: 15px !important;
+}
+
+.mg-lr-15 {
+  margin-left: 15px !important;
+  margin-right: 15px !important;
+}
+
+.pd-15 {
+  padding: 15px !important;
+}
+
+.mg-15 {
+  margin: 15px !important;
+}
+
+.pd-tb-20 {
+  padding-top: 20px !important;
+  padding-bottom: 20px !important;
+}
+
+.mg-tb-20 {
+  margin-top: 20px !important;
+  margin-bottom: 20px !important;
+}
+
+.pd-lr-20 {
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+}
+
+.mg-lr-20 {
+  margin-left: 20px !important;
+  margin-right: 20px !important;
+}
+
+.pd-20 {
+  padding: 20px !important;
+}
+
+.mg-20 {
+  margin: 20px !important;
+}
+
+.pd-tb-30 {
+  padding-top: 30px !important;
+  padding-bottom: 30px !important;
+}
+
+.mg-tb-30 {
+  margin-top: 30px !important;
+  margin-bottom: 30px !important;
+}
+
+.pd-lr-30 {
+  padding-left: 30px !important;
+  padding-right: 30px !important;
+}
+
+.mg-lr-30 {
+  margin-left: 30px !important;
+  margin-right: 30px !important;
+}
+
+.pd-30 {
+  padding: 30px !important;
+}
+
+.mg-30 {
+  margin: 30px !important;
+}
+
+.pd-t-0 {
+  padding-top: 0px !important;
+}
+
+.pd-t-1 {
+  padding-top: 1px !important;
+}
+
+.pd-t-5 {
+  padding-top: 5px !important;
+}
+
+.pd-t-10 {
+  padding-top: 10px !important;
+}
+
+.pd-t-15 {
+  padding-top: 15px !important;
+}
+
+.pd-t-20 {
+  padding-top: 20px !important;
+}
+
+.pd-t-30 {
+  padding-top: 30px !important;
+}
+
+.pd-b-0 {
+  padding-bottom: 0px !important;
+}
+
+.pd-b-1 {
+  padding-bottom: 1px !important;
+}
+
+.pd-b-5 {
+  padding-bottom: 5px !important;
+}
+
+.pd-b-10 {
+  padding-bottom: 10px !important;
+}
+
+.pd-b-15 {
+  padding-bottom: 15px !important;
+}
+
+.pd-b-20 {
+  padding-bottom: 20px !important;
+}
+
+.pd-b-30 {
+  padding-bottom: 30px !important;
+}
+
+.pd-l-0 {
+  padding-left: 0px !important;
+}
+
+.pd-l-1 {
+  padding-left: 1px !important;
+}
+
+.pd-l-5 {
+  padding-left: 5px !important;
+}
+
+.pd-l-10 {
+  padding-left: 10px !important;
+}
+
+.pd-l-15 {
+  padding-left: 15px !important;
+}
+
+.pd-l-20 {
+  padding-left: 20px !important;
+}
+
+.pd-l-30 {
+  padding-left: 30px !important;
+}
+
+.pd-r-0 {
+  padding-right: 0px !important;
+}
+
+.pd-r-1 {
+  padding-right: 1px !important;
+}
+
+.pd-r-5 {
+  padding-right: 5px !important;
+}
+
+.pd-r-10 {
+  padding-right: 10px !important;
+}
+
+.pd-r-15 {
+  padding-right: 15px !important;
+}
+
+.pd-r-20 {
+  padding-right: 20px !important;
+}
+
+.pd-r-30 {
+  padding-right: 30px !important;
+}
+
+.mg-t-0 {
+  margin-top: 0px !important;
+}
+
+.mg-t-1 {
+  margin-top: 1px !important;
+}
+
+.mg-t-5 {
+  margin-top: 5px !important;
+}
+
+.mg-t-10 {
+  margin-top: 10px !important;
+}
+
+.mg-t-15 {
+  margin-top: 15px !important;
+}
+
+.mg-t-20 {
+  margin-top: 20px !important;
+}
+
+.mg-t-30 {
+  margin-top: 30px !important;
+}
+
+.mg-b-0 {
+  margin-bottom: 0px !important;
+}
+
+.mg-b-1 {
+  margin-bottom: 1px !important;
+}
+
+.mg-b-5 {
+  margin-bottom: 5px !important;
+}
+
+.mg-b-10 {
+  margin-bottom: 10px !important;
+}
+
+.mg-b-15 {
+  margin-bottom: 15px !important;
+}
+
+.mg-b-20 {
+  margin-bottom: 20px !important;
+}
+
+.mg-b-30 {
+  margin-bottom: 30px !important;
+}
+
+.mg-l-0 {
+  margin-left: 0px !important;
+}
+
+.mg-l-1 {
+  margin-left: 1px !important;
+}
+
+.mg-l-5 {
+  margin-left: 5px !important;
+}
+
+.mg-l-10 {
+  margin-left: 10px !important;
+}
+
+.mg-l-15 {
+  margin-left: 15px !important;
+}
+
+.mg-l-20 {
+  margin-left: 20px !important;
+}
+
+.mg-l-30 {
+  margin-left: 30px !important;
+}
+
+.mg-r-0 {
+  margin-right: 0px !important;
+}
+
+.mg-r-1 {
+  margin-right: 1px !important;
+}
+
+.mg-r-5 {
+  margin-right: 5px !important;
+}
+
+.mg-r-10 {
+  margin-right: 10px !important;
+}
+
+.mg-r-15 {
+  margin-right: 15px !important;
+}
+
+.mg-r-20 {
+  margin-right: 20px !important;
+}
+
+.mg-r-30 {
+  margin-right: 30px !important;
+}
+
 html,
 body {
   position: relative;
@@ -181,6 +601,19 @@ h1.title .version b {
   margin: 0 10px;
 }
 
+#ignore-rules-box {
+  width: 640px;
+  max-width: 90%;
+}
+
+#ignore-rules-box .text, #ignore-rules-box #scan-result li, #scan-result #ignore-rules-box li, #ignore-rules-box #scan-result .li-nav, #scan-result #ignore-rules-box .li-nav, #ignore-rules-box #rule-list li, #rule-list #ignore-rules-box li, #ignore-rules-box #rule-list .li-nav, #rule-list #ignore-rules-box .li-nav, #ignore-rules-box #white-list li, #white-list #ignore-rules-box li, #ignore-rules-box #white-list .li-nav, #white-list #ignore-rules-box .li-nav, #ignore-rules-box #scan-result .notice, #scan-result #ignore-rules-box .notice, #ignore-rules-box #scan-result ul.files li.file i.text, #scan-result ul.files li.file #ignore-rules-box i.text, #ignore-rules-box #join-white label, #join-white #ignore-rules-box label, #ignore-rules-box #join-rule label, #join-rule #ignore-rules-box label {
+  display: inline-block;
+  width: 31%;
+  margin: 0 1% 10px 1%;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
 #editor .CodeMirror {
   height: 500px !important;
 }
@@ -294,7 +727,7 @@ h1.title .version b {
 
 #scan-result li, #scan-result .li-nav, #rule-list li, #rule-list .li-nav, #white-list li, #white-list .li-nav {
   border-bottom: 1px dashed #e1e1e1;
-  padding: 10px 0;
+  padding: 10px 0 5px 0;
 }
 
 #scan-result li span, #scan-result .li-nav span, #rule-list li span, #rule-list .li-nav span, #white-list li span, #white-list .li-nav span {
@@ -303,8 +736,9 @@ h1.title .version b {
 }
 
 #scan-result li span.id, #scan-result .li-nav span.id, #rule-list li span.id, #rule-list .li-nav span.id, #white-list li span.id, #white-list .li-nav span.id {
-  width: 55px;
-  text-align: right;
+  width: 50px;
+  text-align: left;
+  padding-left: 10px;
 }
 
 #scan-result li span.name, #scan-result .li-nav span.name, #rule-list li span.name, #rule-list .li-nav span.name, #white-list li span.name, #white-list .li-nav span.name {
@@ -314,7 +748,7 @@ h1.title .version b {
 }
 
 #scan-result li span.rule, #scan-result .li-nav span.rule, #rule-list li span.rule, #rule-list .li-nav span.rule, #white-list li span.rule, #white-list .li-nav span.rule {
-  height: 1rem;
+  height: 1.2rem;
 }
 
 #scan-result li span.remark, #scan-result .li-nav span.remark, #rule-list li span.remark, #rule-list .li-nav span.remark, #white-list li span.remark, #white-list .li-nav span.remark {
@@ -323,11 +757,14 @@ h1.title .version b {
 
 #scan-result li span b.lang, #scan-result li span b.level, #scan-result .li-nav span b.lang, #scan-result .li-nav span b.level, #rule-list li span b.lang, #rule-list li span b.level, #rule-list .li-nav span b.lang, #rule-list .li-nav span b.level, #white-list li span b.lang, #white-list li span b.level, #white-list .li-nav span b.lang, #white-list .li-nav span b.level {
   background-color: #9e9e9e;
-  width: 60px;
+  display: inline-block;
+  text-align: center;
+  width: 40px;
   color: #FFF;
-  margin: 0 10px;
-  padding: 2px 5px;
+  margin: 0 10px 0 0;
+  padding: 1px 5px;
   text-transform: uppercase;
+  border-radius: 3px;
 }
 
 #scan-result li span.actions, #scan-result .li-nav span.actions, #rule-list li span.actions, #rule-list .li-nav span.actions, #white-list li span.actions, #white-list .li-nav span.actions {
@@ -341,14 +778,18 @@ h1.title .version b {
   overflow-y: auto;
 }
 
-.file-select {
-  padding: 20px 0;
+.file-select, .path-exclude {
+  padding: 10px 0;
+}
+
+#load-file {
+  margin-top: 30px;
 }
 
 #scan-result .load-notice {
   text-align: center;
   vertical-align: center;
-  padding-top: 10%;
+  padding-top: 5%;
 }
 
 #scan-result .notice {
@@ -397,9 +838,9 @@ h1.title .version b {
 #scan-result ul.files li.file i {
   font-weight: normal;
   font-style: normal;
-  font-size: 0.8rem;
   display: inline-block;
   float: left;
+  font-size: 0.8rem;
 }
 
 #scan-result ul.files li.file b {
@@ -408,13 +849,12 @@ h1.title .version b {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  line-height: 1.3;
   white-space: pre-wrap;
 }
 
 #scan-result ul.files li.file b.file-path {
-  font-family: 'Courier New', Courier, monospace;
   width: calc(100% - 65px);
+  font-weight: bolder;
 }
 
 #scan-result ul.files li.file span {
@@ -463,8 +903,10 @@ h1.title .version b {
 
 #scan-result ul.files li.file .num {
   margin-right: 5px;
-  width: 50px;
-  text-align: right;
+  width: 40px;
+  text-align: left;
+  padding-left: 10px;
+  font-weight: bolder;
   float: left;
 }
 
@@ -671,7 +1113,7 @@ h1.title .version b {
 @media only screen and (max-width: 460px) {
   #scan-result ul.files li.file .name,
   #scan-result ul.files li.file .match {
-    width: 80%;
+    width: calc(100% -60px);
   }
   #scan-result ul.files li.file .size, #scan-result ul.files li.file .time {
     margin-left: 55px;

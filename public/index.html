@@ -1,341 +1,366 @@
 <!DOCTYPE html>
 <!--suppress ALL -->
 <html lang="en" xmlns:x-transition="http://www.w3.org/1999/xhtml" xmlns:x-on="http://www.w3.org/1999/xhtml">
+
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Find-Your-Shell 后门查杀工具</title>
-    <link rel="stylesheet" href="./static/libs/lulu/theme/peak/css/common/ui.css"/>
+    <link rel="stylesheet" href="./static/libs/lulu/theme/peak/css/common/ui.css" />
     <link href="./static/libs/video.js/8.3.0/alt/video-js-cdn.min.css" rel="stylesheet">
     <link rel="stylesheet" href="./static/iconfont/iconfont.css">
     <link rel="stylesheet" href="./static/css/app.css">
 </head>
+
 <body x-data="app">
-<div class="container animate">
+    <div class="container animate">
 
-    <div id="dir-list">
-        <div id="top">
-            <h1 class="title">Find-Your-Shell <span class="version">V<b x-text="app.VERSION"></b></span></h1>
-            <ul class="menu">
+        <div id="dir-list">
+            <div id="top">
+                <h1 class="title">Find-Your-Shell <span class="version">V<b x-text="app.VERSION"></b></span></h1>
+                <ul class="menu">
 
-                <li @click="now_show='files'">
-                    <span><i class="iconfont icon-home"></i><b>首页</b></span>
-                </li>
+                    <li @click="now_show='files'">
+                        <span><i class="iconfont icon-home"></i><b>首页</b></span>
+                    </li>
 
-                <li @click="now_show='rules'">
-                    <span><i class="iconfont icon-list"></i><b>规则</b></span>
-                </li>
+                    <li @click="now_show='rules'">
+                        <span><i class="iconfont icon-list"></i><b>规则</b></span>
+                    </li>
 
-                <li @click="now_show='whites'">
-                    <span><i class="iconfont icon-book"></i><b>白名单</b></span>
-                </li>
-                <li @click="now_show='set'">
-                    <span><i class="iconfont icon-shezhi"></i><b>设置</b></span>
-                </li>
-                <li>
-                    <span @click="changeServer"><i class="iconfont icon-fuwuqi"></i><b>服务器</b></span>
-                </li>
-                <li>
-                    <a :href="app.GITHUB_URL" target="github"><i class="iconfont icon-github"></i><b>github</b></a>
-                </li>
+                    <li @click="now_show='whites'">
+                        <span><i class="iconfont icon-book"></i><b>白名单</b></span>
+                    </li>
+                    <li @click="now_show='set'">
+                        <span><i class="iconfont icon-shezhi"></i><b>设置</b></span>
+                    </li>
+                    <li>
+                        <span @click="changeServer"><i class="iconfont icon-fuwuqi"></i><b>服务器</b></span>
+                    </li>
+                    <li>
+                        <a :href="app.GITHUB_URL" target="github"><i class="iconfont icon-github"></i><b>github</b></a>
+                    </li>
 
-                <li x-show="app.VIDEO_URL">
-                    <span @click="now_show='videos';loadVideos()"><i class="iconfont icon-jc"></i><b>教程</b></span>
-                </li>
+                    <li x-show="app.VIDEO_URL">
+                        <span @click="now_show='videos';loadVideos()"><i class="iconfont icon-jc"></i><b>教程</b></span>
+                    </li>
 
-                <li x-show="app.PLATFORM">
-                    <a :href="app.PLATFORM" target="github"><i class="iconfont icon-shequ"></i><b>社区</b></a>
-                </li>
+                    <li x-show="app.PLATFORM">
+                        <a :href="app.PLATFORM" target="github"><i class="iconfont icon-shequ"></i><b>社区</b></a>
+                    </li>
 
-                <li>
-                    <a :href="app.CONTACT_URL"><i class="iconfont icon-contact"></i><b>求助</b></a>
-                </li>
+                    <li>
+                        <a :href="app.CONTACT_URL"><i class="iconfont icon-contact"></i><b>求助</b></a>
+                    </li>
 
-                <li>
-                    <span @click="app.shang()"><i class="iconfont icon-shang"></i><b>打赏</b></span>
-                </li>
-            </ul>
+                    <li>
+                        <span @click="app.shang()"><i class="iconfont icon-shang"></i><b>打赏</b></span>
+                    </li>
+                </ul>
+
+            </div>
+            <input type="text" x-model="path" class="ui-input path" @dbclick="setPath('/')" x-init="$watch('path', value => load())">
+            <div class="gotop-dir"><span @click="goBackPath()">返回上一层</span></div>
+            <div>
+                <ul id="root">
+                    <template x-for="dir in dirs">
+                        <li class="dir" @click="setPath(path_root + '/' + dir)">
+                            <i class="iconfont icon-dir"></i>
+                            <span x-text="dir"></span>
+                        </li>
+                    </template>
+                </ul>
+            </div>
 
         </div>
-        <input type="text" x-model="path" class="ui-input path" @dbclick="setPath('/')"
-               x-init="$watch('path', value => load())">
-        <div class="gotop-dir"><span @click="goBackPath()">返回上一层</span></div>
-        <div>
-            <ul id="root">
-                <template x-for="dir in dirs">
-                    <li class="dir" @click="setPath(path_root + '/' + dir)">
-                        <i class="iconfont icon-dir"></i>
-                        <span x-text="dir"></span>
+
+        <div id="scan-result" x-show="now_show=='files'">
+            <div class="notice" x-show="hash_ls" style="display: none">
+                <p>
+                    <span x-show="hash_ls">当前文件夹下共<b x-text="files_num" @click="showFiles('file')" class="files_num"></b>个文件</span>
+                    <span x-show="shells_num>0">根据内置规则扫描出 <b x-text="shells_num" class="shells_num" @click="showFiles('shell')"> </b>个可疑文件</span>
+
+                    <span>
+                        <span x-show="hash_ls>0" @click="ls('shell')"> <button class="ui-button ui-button-success small-btn" id="scan-btn" x-text="scan=='shell'?'再次查杀':'开始查杀'"></button> <span x-show="scaning_time > 0" x-text="scaning_time +'秒'"></span></span>
+                        <button class="ui-button ui-button-primary small-btn" x-show="show_type=='shell' && show.length>0" @click="showJoinWhiteList(true)"> 全部白名单
+                        </button>
+                    </span>
+
+                    <!-- 新增的忽略规则按钮 -->
+                    <button class="ui-button ui-button-primary small-btn" x-show="shells_num>0" style="float: right;" @click="showIgnoreRulesDialog()">
+                        忽略规则
+                    </button>
+                </p>
+            </div>
+ 
+            <!-- 新增的忽略规则对话框 -->
+            <div id="ignore-rules-dialog"  style="display: none;"> 
+                <div class="file-types pd-tb-20" id="ignore-rules-box">
+                    <template x-for="(rule, index) in fileRules" :key="rule">
+                        <span class="text">
+                            <input type="checkbox" :id="'ignore_rule_'+index" :value="rule" x-model="ignoreRules">
+                            <label :for="'ignore_rule_'+index" class="ui-checkbox"></label>
+                            <label :for="'ignore_rule_'+index" x-text="rule"></label>
+                        </span>
+                    </template>
+                </div>
+                <div class="dialog-buttons">
+                    <button class="ui-button ui-button-primary" @click="updateIgnoreRules(ignoreRules)">确定</button>
+                    <button class="ui-button" @click="window.ignoreRulesDialog.hide()">取消</button>
+                </div>
+            </div>
+
+
+            <div x-show="!hash_ls" class="load-notice">
+                <p class="text">选择要扫描的文件类型然后点击加载</p>
+                <div class="file-select">
+                    <template x-for="_ft in file_types">
+                        <span class="text">
+                            <input type="checkbox" :id="'file_select_'+_ft" name="rule_lang" :value="_ft" @click="selectFileExt(_ft)" :checked="inSelectFile(_ft)">
+                            <label :for="'file_select_'+_ft" class="ui-checkbox"></label><label :for="'file_select_'+_ft"> </label><span x-text="_ft"></span>
+                        </span>
+                    </template>
+                </div>
+
+                <br>
+                <!-- 修改后的路径排除功能 -->
+                <p class="text">选择要排除的路径</p>
+                <div class="path-exclude">
+                    <template x-for="(path, index) in exclude_config">
+                        <span class="text">
+                            <input type="checkbox" :id="'path_exclude_'+index" :value="path" @click="toggleExcludePath(path)" :checked="isPathExcluded(path)">
+                            <label :for="'path_exclude_'+index" class="ui-checkbox"></label>
+                            <label :for="'path_exclude_'+index" x-text="path"></label>
+                        </span>
+                    </template>
+                </div>
+
+
+                <p class="text">
+                    <span class="ui-button ui-button ui-button-primary" id="load-file" @click="ls(false)">
+                        <i class="iconfont icon-filter"></i> 点击加载文件</span>
+                </p>
+
+                <ol id="home-notice">
+                    <li class="text">选择左边的文件夹,然后点击加载文件进行开始查杀</li>
+                    <li class="text">默认规则都是基于对PHP的查杀,可以自定义添加规则对指定后缀文件查杀</li>
+                    <li class="text">查不出来是因为后门变种代码千奇百怪,没有规则能匹配中代码</li>
+                    <li class="text">注:查杀出来的结果只是恰好能匹配中规则,但是不是后门需要进一步分析代码</li>
+                </ol>
+
+                <div id="quiker-dirs">
+                    <p class="text">您配置的快速访问文件夹目录,可以在配置中修改</p>
+
+                    <p>
+                        <template x-for="(qd,qd_index) in quick_dirs">
+                            <button @click="setPath(qd)" class="ui-button ui-button ui-button-success small-btn" x-text="qd_index+':'+qd.path"></button>
+                        </template>
+                    </p>
+
+                </div>
+            </div>
+
+
+            <ul class="files" id="show-files" x-show="hash_ls">
+
+            </ul>
+        </div>
+
+        <div id="video-list" x-show="now_show=='videos'" style="display: none">
+            <ul>
+                <template x-for="(video, v_index) in videos" :key="v_index">
+                    <li @click="play(video);"> <i class="iconfont icon-run"></i>
+                        <h3 x-text="video.name"></h3>
                     </li>
                 </template>
             </ul>
         </div>
 
-    </div>
-
-    <div id="scan-result" x-show="now_show=='files'">
-        <div class="notice" x-show="hash_ls" style="display: none">
-            <p>
-                <span x-show="hash_ls">当前文件夹下共<b x-text="files_num" @click="showFiles('file')"
-                                                        class="files_num"></b>个文件</span>
-                <span x-show="shells_num>0">根据内置规则扫描出 <b x-text="shells_num" class="shells_num"
-                                                                  @click="showFiles('shell')"> </b>个可疑文件</span>
-
-                <span>
-                            <span x-show="hash_ls>0" @click="ls('shell')"> <button
-                                    class="ui-button ui-button-success small-btn" id="scan-btn"
-                                    x-text="scan=='shell'?'再次查杀':'开始查杀'"></button> <span
-                                    x-show="scaning_time > 0" x-text="scaning_time +'秒'"></span></span>
-                            <button class="ui-button ui-button-primary small-btn"
-                                    x-show="show_type=='shell' && show.length>0"
-                                    @click="showJoinWhiteList(true)"> 全部白名单 </button>
-                        </span>
-            </p>
+        <div id="video" style="display: none">
+            <video id="player" class="video-js" controls preload="auto" data-setup='{}'>
+                <source src="https://www.w3schools.com/html/movie.mp4" type="video/mp4">
+                </source>
+                <p class="vjs-no-js">
+                    您的浏览器不支持使用
+                    <a href="https://videojs.com/html5-video-support/" target="_blank">
+                        HTML5
+                    </a>
+                    播放视频,请升级您的浏览器后进行观看
+                </p>
+            </video>
         </div>
 
-        <div x-show="!hash_ls" class="load-notice">
-            <p class="text">选择要扫描的文件类型然后点击加载</p>
-            <div class="file-select">
+
+        <div id="rule-list" x-show="now_show=='rules'" style="display: none">
+            <div class="li-nav">
+                <span class="id"></span>
+                <span class="name">规则</span>
+                <span class="remark"> 备注</span>
+                <span class="actions"></span>
+            </div>
+            <ul>
+                <template x-for="(_rule, index) in rules" :key="index">
+                    <li>
+                        <span class="id">
+                            <b x-text="_rule.Id"></b>
+                        </span>
+                        <span class="name rule" @click="showRule(_rule.Rule,true)">
+                            <b class="lang" x-text="_rule.Lang"></b>
+                            <b :class="'level level-'+_rule.Level" x-text="_rule.Level"></b>
+                            <b x-text="_rule.Rule"></b>
+                        </span>
+                        <span class="remark"> <b x-text="_rule.Remark"></b></span>
+                        <span class="actions">
+                            <i class="iconfont icon-delete tips" title="删除" @click="delData(_rule.Id,'rules')"></i>
+                        </span>
+                    </li>
+                </template>
+            </ul>
+        </div>
+
+        <div id="white-list" x-show="now_show=='whites'" style="display: none">
+
+            <div class="li-nav">
+                <span class="id"></span>
+                <span class="name">规则</span>
+                <span class="remark"> 备注</span>
+                <span class="actions"></span>
+            </div>
+
+            <ul>
+                <template x-for="(_white, w_index) in white_list" :key="w_index">
+                    <li>
+                        <span class="id">
+                            <b x-text="_white.Id"></b>
+                        </span>
+                        <span class="name"> <b class="lang" x-text="_white.RuleType"></b><b x-text="_white.Rule"></b></span>
+                        <span class="remak"> <b x-text="_white.Remark"></b></span>
+                        <span class="actions">
+                            <i class="iconfont icon-delete tips" title="删除" @click="delData(_white.Id,'white_list')"></i>
+                        </span>
+                    </li>
+                </template>
+            </ul>
+        </div>
+
+
+        <div id="config-list" x-show="now_show=='set'">
+            <ul>
+                <template x-for="(_conf, c) in configs" :key="c">
+                    <li @click="editConfig(_conf)"><b x-text="_conf.Title"></b></li>
+                </template>
+            </ul>
+        </div>
+
+        <div id="config" style="display:none;">
+            <p class="text" x-text="config.Remark"></p>
+            <textarea class="ui-textarea" rows="8" x-model="config.Value"></textarea>
+            <div class="text-right"><span class="ui-button ui-button-success" @click="saveConfig()">保存</span></div>
+        </div>
+
+        <div id="join-white" style="display:none;">
+            <input type="text" x-model="code_file" class="ui-input path">
+            <div class="radios">
+                <input type="radio" id="rule_type_hash" name="rule_type" value="hash" :checked="white_type=='hash'">
+                <label for="rule_type_hash" class="ui-radio" @click="white_type='hash'"></label><label for="rule_type_hash">文件hash</label>
+
+                <input type="radio" id="rule_type_path" name="rule_type" value="path" :checked="white_type=='path'">
+                <label for="rule_type_path" class="ui-radio" @click="white_type='path'">></label><label for="rule_type_path">文件路径</label>
+            </div>
+
+            <div class="ui-textarea"><textarea rows="4" x-model="white_remark" placeholder="这里添加备注信息"></textarea>
+            </div>
+            <p><span class="ui-botton ui-button ui-button-primary" @click="joinWhiteList()">提交</span></p>
+        </div>
+
+        <div id="join-rule" style="display:none;">
+            <div class="ui-textarea"><span class="text">规则</span><textarea rows="4" id="rule" x-model="match_rule" placeholder="这里填写规则"></textarea></div>
+            <div class="radios">
+                <span class="text">文件类型</span>
 
                 <template x-for="_ft in file_types">
-                    <span class="text">
-                        <input type="checkbox" :id="'file_select_'+_ft" name="rule_lang" :value="_ft"
-                               @click="selectFileExt(_ft)" :checked="inSelectFile(_ft)">
-                    <label :for="'file_select_'+_ft" class="ui-checkbox"></label><label
-                            :for="'file_select_'+_ft"> </label><span x-text="_ft"></span>
+                    <span>
+                        <input type="radio" :id="'rule_lang_'+_ft" name="rule_lang" :value="_ft" :checked="rule_lang==_ft">
+                        <label :for="'rule_lang_'+_ft" class="ui-radio" @click="rule_lang=_ft"></label><label :for="'rule_lang_'+_ft"> </label><span x-text="_ft"></span>
                     </span>
                 </template>
             </div>
-            <p class="text">
-                <span class="ui-button ui-button ui-button-primary" id="load-file" @click="ls(false)">
-                <i class="iconfont icon-filter"></i> 点击加载文件</span>
+            <p>
+                <span class="text">提示等级</span>
+                <input type="number" x-model="rule_level" class="ui-input path" placeholder="提示等级默认有1,100,配合css样式使用">
             </p>
-
-            <ol id="home-notice">
-                <li class="text">选择左边的文件夹,然后点击加载文件进行开始查杀</li>
-                <li class="text">默认规则都是基于对PHP的查杀,可以自定义添加规则对指定后缀文件查杀</li>
-                <li class="text">查不出来是因为后门变种代码千奇百怪,没有规则能匹配中代码</li>
-                <li class="text">注:查杀出来的结果只是恰好能匹配中规则,但是不是后门需要进一步分析代码</li>
-            </ol>
-
-            <div id="quiker-dirs">
-                <p class="text">您配置的快速访问文件夹目录,可以在配置中修改</p>
-
-                <p>
-                    <template x-for="(qd,qd_index) in quick_dirs">
-                        <button @click="setPath(qd)" class="ui-button ui-button ui-button-success small-btn"
-                                x-text="qd_index+':'+qd.path"></button>
-                    </template>
-                </p>
-
+            <div class="ui-textarea"><span class="text">备注</span><textarea rows="4" x-model="rule_remark" placeholder="这里添加备注信息"></textarea>
             </div>
+            <p class="text-right"><span class="ui-botton ui-button ui-button-primary" @click="joinRule()" x-text="rule_id?'更新规则':'保存规则'"></span></p>
         </div>
 
-
-        <ul class="files" id="show-files" x-show="hash_ls">
-
-        </ul>
-    </div>
-
-    <div id="video-list" x-show="now_show=='videos'" style="display: none">
-        <ul>
-            <template x-for="(video, v_index) in videos" :key="v_index">
-                <li @click="play(video);">  <i class="iconfont icon-run"></i><h3 x-text="video.name"></h3></li>
-            </template>
-        </ul>
-    </div>
-
-    <div id="video" style="display: none">
-        <video id="player" class="video-js" controls preload="auto" data-setup='{}'>
-            <source src="https://www.w3schools.com/html/movie.mp4" type="video/mp4">
-            </source>
-            <p class="vjs-no-js">
-                您的浏览器不支持使用
-                <a href="https://videojs.com/html5-video-support/" target="_blank">
-                    HTML5
-                </a>
-                播放视频,请升级您的浏览器后进行观看
-            </p>
-        </video>
-    </div>
-
-
-    <div id="rule-list" x-show="now_show=='rules'" style="display: none">
-        <div class="li-nav">
-            <span class="id"></span>
-            <span class="name">规则</span>
-            <span class="remark"> 备注</span>
-            <span class="actions"></span>
-        </div>
-        <ul>
-            <template x-for="(_rule, index) in rules" :key="index">
-                <li>
-                     <span class="id">
-                         <b x-text="_rule.Id"></b>
-                     </span>
-                    <span class="name rule" @click="showRule(_rule.Rule,true)">
-                        <b class="lang" x-text="_rule.Lang"></b>
-                         <b :class="'level level-'+_rule.Level" x-text="_rule.Level"></b>
-                        <b x-text="_rule.Rule"></b>
-                    </span>
-                    <span class="remark"> <b x-text="_rule.Remark"></b></span>
-                    <span class="actions">
-                        <i class="iconfont icon-delete tips" title="删除" @click="delData(_rule.Id,'rules')"></i>
-                    </span>
-                </li>
-            </template>
-        </ul>
-    </div>
-
-    <div id="white-list" x-show="now_show=='whites'" style="display: none">
-
-        <div class="li-nav">
-            <span class="id"></span>
-            <span class="name">规则</span>
-            <span class="remark"> 备注</span>
-            <span class="actions"></span>
-        </div>
-
-        <ul>
-            <template x-for="(_white, w_index) in white_list" :key="w_index">
-                <li>
-                    <span class="id">
-                        <b x-text="_white.Id"></b>
-                     </span>
-                    <span class="name"> <b class="lang" x-text="_white.RuleType"></b><b x-text="_white.Rule"></b></span>
-                    <span class="remak"> <b x-text="_white.Remark"></b></span>
-                    <span class="actions">
-                        <i class="iconfont icon-delete tips" title="删除" @click="delData(_white.Id,'white_list')"></i>
-                    </span>
-                </li>
-            </template>
-        </ul>
-    </div>
-
-
-    <div id="config-list" x-show="now_show=='set'">
-        <ul>
-            <template x-for="(_conf, c) in configs" :key="c">
-                <li @click="editConfig(_conf)"><b x-text="_conf.Title"></b></li>
-            </template>
-        </ul>
-    </div>
-
-    <div id="config" style="display:none;">
-        <p class="text" x-text="config.Remark"></p>
-        <textarea class="ui-textarea" rows="8" x-model="config.Value"></textarea>
-        <div class="text-right"><span class="ui-button ui-button-success" @click="saveConfig()">保存</span></div>
-    </div>
-
-    <div id="join-white" style="display:none;">
-        <input type="text" x-model="code_file" class="ui-input path">
-        <div class="radios">
-            <input type="radio" id="rule_type_hash" name="rule_type" value="hash" :checked="white_type=='hash'">
-            <label for="rule_type_hash" class="ui-radio" @click="white_type='hash'"></label><label for="rule_type_hash">文件hash</label>
-
-            <input type="radio" id="rule_type_path" name="rule_type" value="path" :checked="white_type=='path'">
-            <label for="rule_type_path" class="ui-radio" @click="white_type='path'">></label><label
-                for="rule_type_path">文件路径</label>
-        </div>
-
-        <div class="ui-textarea"><textarea rows="4" x-model="white_remark" placeholder="这里添加备注信息"></textarea>
-        </div>
-        <p><span class="ui-botton ui-button ui-button-primary" @click="joinWhiteList()">提交</span></p>
-    </div>
-
-    <div id="join-rule" style="display:none;">
-        <div class="ui-textarea"><span class="text">规则</span><textarea rows="4" id="rule" x-model="match_rule"  placeholder="这里填写规则"></textarea></div>
-        <div class="radios">
-            <span class="text">文件类型</span>
-
-            <template x-for="_ft in file_types">
-                <span>
-                    <input type="radio" :id="'rule_lang_'+_ft" name="rule_lang" :value="_ft" :checked="rule_lang==_ft">
-                <label :for="'rule_lang_'+_ft" class="ui-radio" @click="rule_lang=_ft"></label><label
-                        :for="'rule_lang_'+_ft"> </label><span x-text="_ft"></span>
-                </span>
-            </template>
-        </div>
-        <p>
-            <span class="text">提示等级</span>
-            <input type="number" x-model="rule_level" class="ui-input path"
-                   placeholder="提示等级默认有1,100,配合css样式使用">
-        </p>
-        <div class="ui-textarea"><span class="text">备注</span><textarea rows="4" x-model="rule_remark"
-                                                                         placeholder="这里添加备注信息"></textarea>
-        </div>
-        <p class="text-right"><span class="ui-botton ui-button ui-button-primary" @click="joinRule()" x-text="rule_id?'更新规则':'保存规则'"></span></p>
-    </div>
-
-    <div class="mask">
-        <div id="editor">
-            <textarea id="code"></textarea>
-            <div class="actions">
-                <div class="file">
-                    <span class="text">当前文件</span>
-                    <input type="text" class="ui-input" name="code_file" id="code_file">
-                    <span class="ui-button ui-button-primary" @click="saveFile()">保存文件</span>
-                    <span class="ui-button ui-button-warning" @click="delFile()">删除文件</span>
-                    <span class="ui-button ui-button-success" @click="showJoinWhiteList(false)">加入白名单</span>
-                    <span class="ui-button ui-button-primary" @click="help()">无法判断是不是后门?</span>
-                </div>
-                <div class="search">
-                    <div>
-                        <span class="text">文件查找</span>
-                        <input type="text" class="ui-input cursor-pointer" name="match_rule" id="match_rule"
-                               x-on:click="search()" x-model="match_rule"
-                               x-init="$watch('match_rule', value => search())">
-                        <span class="ui-button ui-button-primary" @click="showSaveRule()">保存规则</span>
-                        <span class="ui-button ui-button-primary" @click="searchRule()"
-                              title="可以再已有的规则上进行编辑">查找类似规则</span>
-                        <div x-show="rule_remark"><span class="text"></span><i class="text" x-text="rule_remark"></i>
-                        </div>
-                        <div id="similar-rules">
-
-                        </div>
+        <div class="mask">
+            <div id="editor">
+                <textarea id="code"></textarea>
+                <div class="actions">
+                    <div class="file">
+                        <span class="text">当前文件</span>
+                        <input type="text" class="ui-input" name="code_file" id="code_file">
+                        <span class="ui-button ui-button-primary" @click="saveFile()">保存文件</span>
+                        <span class="ui-button ui-button-warning" @click="delFile()">删除文件</span>
+                        <span class="ui-button ui-button-success" @click="showJoinWhiteList(false)">加入白名单</span>
+                        <span class="ui-button ui-button-primary" @click="help()">无法判断是不是后门?</span>
                     </div>
+                    <div class="search">
+                        <div>
+                            <span class="text">文件查找</span>
+                            <input type="text" class="ui-input cursor-pointer" name="match_rule" id="match_rule" x-on:click="search()" x-model="match_rule" x-init="$watch('match_rule', value => search())">
+                            <span class="ui-button ui-button-primary" @click="showSaveRule()">保存规则</span>
+                            <span class="ui-button ui-button-primary" @click="searchRule()" title="可以再已有的规则上进行编辑">查找类似规则</span>
+                            <div x-show="rule_remark"><span class="text"></span><i class="text" x-text="rule_remark"></i>
+                            </div>
+                            <div id="similar-rules">
 
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<script src="./static/libs/lulu/theme/peak/js/plugin/jquery.js"></script>
-<script src="./static/libs/lulu/theme/peak/js/common/all.js"></script>
-<script src="./static/libs/dot/1.1.3/doT.min.js"></script>
-<!-- 代码高亮 -->
-<link href="./static/libs/codemirror/6.65.7/codemirror.min.css" rel="stylesheet">
-<link href="./static/libs/codemirror/6.65.7/theme/monokai.min.css" rel="stylesheet">
-<script src="./static/libs/codemirror/6.65.7/codemirror.min.js"></script>
-<script src="./static/libs/codemirror/6.65.7/addon/edit/matchbrackets.min.js"></script>
-<script src="./static/libs/codemirror/6.65.7/mode/javascript/javascript.min.js"></script>
-<script src="./static/libs/codemirror/6.65.7/mode/css/css.min.js"></script>
-<script src="./static/libs/codemirror/6.65.7/mode/xml/xml.min.js"></script>
-<script src="./static/libs/codemirror/6.65.7/mode/clike/clike.min.js"></script>
-<script src="./static/libs/codemirror/6.65.7/mode/htmlmixed/htmlmixed.min.js"></script>
-<script src="./static/libs/codemirror/6.65.7/mode/php/php.min.js"></script>
-<!-- 搜索替换 -->
-<script src="./static/libs/codemirror/6.65.7/addon/search/search.min.js"></script>
-<script src="./static/libs/codemirror/6.65.7/addon/scroll/annotatescrollbar.min.js"></script>
-<script src="./static/libs/codemirror/6.65.7/addon/search/jump-to-line.min.js"></script>
-<script src="./static/libs/codemirror/6.65.7/addon/search/match-highlighter.min.js"></script>
-<script src="./static/libs/codemirror/6.65.7/addon/search/matchesonscrollbar.min.js"></script>
-<script src="./static/libs/codemirror/6.65.7/addon/search/searchcursor.js"></script>
-<script src="./static/libs/codemirror/6.65.7/addon/dialog/dialog.min.js"></script>
-<link href="./static/libs/codemirror/6.65.7/addon/dialog/dialog.min.css" rel="stylesheet">
+    <script src="./static/libs/lulu/theme/peak/js/plugin/jquery.js"></script>
+    <script src="./static/libs/lulu/theme/peak/js/common/all.js"></script>
+    <script src="./static/libs/dot/1.1.3/doT.min.js"></script>
+    <!-- 代码高亮 -->
+    <link href="./static/libs/codemirror/6.65.7/codemirror.min.css" rel="stylesheet">
+    <link href="./static/libs/codemirror/6.65.7/theme/monokai.min.css" rel="stylesheet">
+    <script src="./static/libs/codemirror/6.65.7/codemirror.min.js"></script>
+    <script src="./static/libs/codemirror/6.65.7/addon/edit/matchbrackets.min.js"></script>
+    <script src="./static/libs/codemirror/6.65.7/mode/javascript/javascript.min.js"></script>
+    <script src="./static/libs/codemirror/6.65.7/mode/css/css.min.js"></script>
+    <script src="./static/libs/codemirror/6.65.7/mode/xml/xml.min.js"></script>
+    <script src="./static/libs/codemirror/6.65.7/mode/clike/clike.min.js"></script>
+    <script src="./static/libs/codemirror/6.65.7/mode/htmlmixed/htmlmixed.min.js"></script>
+    <script src="./static/libs/codemirror/6.65.7/mode/php/php.min.js"></script>
+    <!-- 搜索替换 -->
+    <script src="./static/libs/codemirror/6.65.7/addon/search/search.min.js"></script>
+    <script src="./static/libs/codemirror/6.65.7/addon/scroll/annotatescrollbar.min.js"></script>
+    <script src="./static/libs/codemirror/6.65.7/addon/search/jump-to-line.min.js"></script>
+    <script src="./static/libs/codemirror/6.65.7/addon/search/match-highlighter.min.js"></script>
+    <script src="./static/libs/codemirror/6.65.7/addon/search/matchesonscrollbar.min.js"></script>
+    <script src="./static/libs/codemirror/6.65.7/addon/search/searchcursor.js"></script>
+    <script src="./static/libs/codemirror/6.65.7/addon/dialog/dialog.min.js"></script>
+    <link href="./static/libs/codemirror/6.65.7/addon/dialog/dialog.min.css" rel="stylesheet">
 
-<script src="./static/js/app.js"></script>
+    <script src="./static/js/app.js"></script>
 
-<script>
-    window.editor = CodeMirror.fromTextArea(document.getElementById("code"), {
-        lineNumbers: true,
-        extraKeys: {"Alt-F": "findPersistent"},
-        theme: "monokai",
-        charset: "utf-8",
-        mode: "application/x-httpd-php",
-        indentUnit: 4,
-    });
+    <script>
+        window.editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+            lineNumbers: true,
+            extraKeys: { "Alt-F": "findPersistent" },
+            theme: "monokai",
+            charset: "utf-8",
+            mode: "application/x-httpd-php",
+            indentUnit: 4,
+        });
 
-</script>
+    </script>
 </body>
+
 </html>
