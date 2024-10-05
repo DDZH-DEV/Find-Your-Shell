@@ -292,8 +292,6 @@ func handleFiles(db *sqlx.DB) gin.HandlerFunc {
 		}
 
 		files := Scandir(path, exts, path_exclude)
-		//打印要扫描的文件
-		fmt.Println("Scan files:", files)
 		ScanResult = []FileScanRes{}
 
 		//在此处把Rules按照lang类型分组
@@ -372,27 +370,45 @@ func handleDir(c *gin.Context) {
 }
 
 func handleUpdate(c *gin.Context) {
-	resp, err := http.Get("https://gitee.com/DDZH-DEV/Find-Your-Shell/raw/master/update.json")
+	urls := []string{
+		"https://github.moeyy.xyz/https://github.com/DDZH-DEV/Find-Your-Shell/blob/master/update.json",
+		"https://github.com/DDZH-DEV/Find-Your-Shell/blob/master/update.json",
+	}
+
+	var resp *http.Response
+	var err error
+
+	for _, url := range urls {
+		resp, err = http.Get(url)
+		if err == nil && resp.StatusCode == 200 {
+			break
+		}
+		if resp != nil {
+			resp.Body.Close()
+		}
+	}
+
 	if err != nil {
-		MJson(200, "", err.Error(), c)
+		MJson(0, "", "无法获取更新信息: "+err.Error(), c)
 		return
 	}
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Println("Failed to read response body:", err)
+		MJson(0, "", "读取响应失败: "+err.Error(), c)
 		return
 	}
 
-	if resp.StatusCode != 200 || string(body) == "" {
-		MJson(0, "", "", c)
+	if string(body) == "" {
+		MJson(0, "", "更新信息为空", c)
 		return
 	}
+
 	var res map[string]interface{}
 	err = json.Unmarshal(body, &res)
 	if err != nil {
-		MJson(0, "", err.Error(), c)
+		MJson(0, "", "解析JSON失败: "+err.Error(), c)
 		return
 	}
 

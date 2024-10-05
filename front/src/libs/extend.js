@@ -36,11 +36,11 @@ export default {
         util.ajax('/update', function (res) {
             var data=res.data;
             _this.updateConfig(data)
-            if (config.VERSION !== data.version && (typeof update_notice !="undefined" && update_notice!=0 )) {
+            if (data.version && config.VERSION !== data.version && (typeof update_notice !="undefined" && update_notice!=0 )) {
                 new Dialog({
-                    title: "检测到新版本 V"+data.version+",可前往github下载",
-                    content: '<div id="update"> <a class="ui-button ui-button ui-button-warning" target="_blank" href="https://github.com/DDZH-DEV/Find-Your-Shell">GITHUB下载</a>' +
-                        '<a href="https://gitee.com/DDZH-DEV/Find-Your-Shell" class="ui-button ui-button ui-button-warning"  target="_blank" >GITEE下载</a></div>',
+                    title: "您当前的版本为 V"+config.VERSION+", 检测到新版本 V"+data.version+",可前往github下载",
+                    content: '<div id="update"> <a class="ui-button ui-button ui-button-warning" target="_blank" href="https://github.com/DDZH-DEV/Find-Your-Shell">GITHUB下载</a></div>',
+                    // +'<a href="https://gitee.com/DDZH-DEV/Find-Your-Shell" class="ui-button ui-button ui-button-warning"  target="_blank" >GITEE下载</a></div>',
                     buttons:[{
                         value:'不再提醒',
                         events: function(event) {
@@ -61,7 +61,7 @@ export default {
     help(){
         new Dialog({
             title: '温馨提示',
-            content: '这个功能本是上传到云端进行匹配,但这功能没写完,可以找人去识别判断.',
+            content: '这个功能本是上传到云端进行匹配,但这功能没写完.',
             buttons: [{},{}]
         });
     }

@@ -22,7 +22,10 @@ func PrintIPs(port string) {
 		for _, addr := range addrs {
 			ipnet, ok := addr.(*net.IPNet)
 			if ok && !ipnet.IP.IsLoopback() && ipnet.IP.To4() != nil {
-				fmt.Printf("API: http://%s:%s\n", ipnet.IP.String(), port)
+				// 添加检查，排除169.254开头的IP地址
+				if !ipnet.IP.IsLinkLocalUnicast() {
+					fmt.Printf("API: http://%s:%s\n", ipnet.IP.String(), port)
+				}
 			}
 		}
 	}
