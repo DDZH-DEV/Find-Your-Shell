@@ -1,6 +1,47 @@
 import storage from "./storage";
 import config from "../config";
 
+
+function _multipleClick() {
+
+    this.click_time = 0;
+    this.click_count = 0;
+
+    var _this = this;
+
+    this.addClick = function(num, callback, tag) {
+        var time = new Date().getTime();
+
+        if (this.click_count == 0 || time - this.click_time < 300) {
+
+            this.click_count += 1;
+
+            console.log(tag + '事件当前点击：' + this.click_count);
+
+            if (this.click_count == num) {
+
+                if (!(!callback || typeof callback == 'undefined' || callback == undefined)) callback();
+
+            }
+
+            this.click_time = time;
+        }
+        setTimeout(function() {
+            check();
+        }, 300);
+
+    }
+
+
+    function check() {
+        var time = new Date().getTime();
+        if (time - _this.click_time > 300) {
+            _this.click_count = 0;
+            _this.click_time = 0;
+        }
+    }
+}
+
 export default {
     turn: function (str) {
         str = typeof str == "string" ? str.replace(/\\/g, '\\\\') : '';
@@ -81,7 +122,7 @@ export default {
         }
         return arr;
     },
-    ajax: function (url, data, callback) {
+    ajax: function (url, data, callback,failcallback) {
         let _this = this,
             type = typeof data != "object" ? "get" : "post",
             server = storage.get('api_url') || config.API_URL,
@@ -89,7 +130,7 @@ export default {
         _url = _url.replace(/\/{3,}/gi, "/");
         callback = (typeof callback == "undefined" && typeof data == "function") ? data : callback;
         if (typeof data == "object") {
-            data.t = data.token ? data.token : storage.get("token");
+            data.t = data.token || storage.get("token");
         }
         $.ajax({
             url: _url,
@@ -122,10 +163,11 @@ export default {
             fail: function (res) {
                 console.log(res);
                 _this.msg('请求失败:' + res.statusText, 'error');
+                failcallback && failcallback(res);
             },
             error(res) {
                 console.log(res);
-                _this.msg('请求失败,请确认服务器地址' + server + '是否正确', 'error');
+                failcallback && failcallback(res);
             }
         });
     },
@@ -383,6 +425,60 @@ export default {
         }
         let res = (1 - d[n][m] / l)
         return res.toFixed(f)
-    }
+    },
+    copyToClipboard(text) {
+        if (navigator.clipboard && window.isSecureContext) {
+            // 对于支持 Clipboard API 的现代浏览器
+            navigator.clipboard.writeText(text).then(() => {
+                util.msg('密钥已成功复制到剪贴板');
+            }).catch(err => {
+                console.error('无法复制文本: ', err);
+                util.msg('复制失败，请手动复制');
+            });
+        } else {
+            // 回退方法，适用于不支持 Clipboard API 的浏览器
+            let textArea = document.createElement("textarea");
+            textArea.value = text;
+            
+            // 使 textArea 不可见
+            textArea.style.position = "fixed";
+            textArea.style.left = "-999999px";
+            textArea.style.top = "-999999px";
+            document.body.appendChild(textArea);
+            
+            textArea.focus();
+            textArea.select();
+    
+            try {
+                let successful = document.execCommand('copy');
+                if (successful) {
+                    util.msg('密钥已成功复制到剪贴板');
+                } else {
+                    util.msg('复制失败，请手动复制');
+                }
+            } catch (err) {
+                console.error('无法复制文本: ', err);
+                util.msg('复制失败，请手动复制');
+            }
+    
+            document.body.removeChild(textArea);
+        }
+    },
+    click: function(num, callback, tag) {
+
+        if (!global.multipleClick) {
+            global.multipleClick = {};
+        }
+		 
+        var obj = global.multipleClick[tag];
+
+        if (!obj) {
+            obj = global.multipleClick[tag] = new _multipleClick();
+        }
+
+        obj.addClick(num, callback, tag);
+    } 
+    
+ 
 
 };

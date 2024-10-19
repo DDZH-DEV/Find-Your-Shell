@@ -5,9 +5,9 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Find-Your-Shell 后门查杀工具</title>
+    <title>FindShell 后门查杀工具</title>
     <link rel="stylesheet" href="./static/libs/lulu/theme/peak/css/common/ui.css" />
-    <link href="./static/libs/video.js/8.3.0/alt/video-js-cdn.min.css" rel="stylesheet">
+    <link href="./static/libs/video.js/video-js.min.css" rel="stylesheet">
     <link rel="stylesheet" href="./static/iconfont/iconfont.css">
     <link rel="stylesheet" href="./static/css/app.css">
 </head>
@@ -17,7 +17,7 @@
 
         <div id="dir-list">
             <div id="top">
-                <h1 class="title">Find-Your-Shell <span class="version">V<b x-text="app.VERSION"></b></span></h1>
+                <h1 class="title">FindShell <span class="version" @click="sgkd()">V<b x-text="app.VERSION"></b></span></h1>
                 <ul class="menu">
 
                     <li @click="now_show='files'">
@@ -34,27 +34,23 @@
                     <li @click="now_show='set'">
                         <span><i class="iconfont icon-shezhi"></i><b>设置</b></span>
                     </li>
-                    <li>
-                        <span @click="changeServer"><i class="iconfont icon-fuwuqi"></i><b>服务器</b></span>
+                    <li x-show="!authenticated" style="display: none;">
+                        <span @click="showAuthDialog()"><i class="iconfont icon-fuwuqi"></i><b>激活</b></span>
                     </li>
-                    <li>
+                    <li style="display: none;">
                         <a :href="app.GITHUB_URL" target="github"><i class="iconfont icon-github"></i><b>github</b></a>
                     </li>
 
-                    <li x-show="app.VIDEO_URL">
+                    <li x-show="app.VIDEO_URL" style="display: none;">
                         <span @click="now_show='videos';loadVideos()"><i class="iconfont icon-jc"></i><b>教程</b></span>
                     </li>
 
                     <li x-show="app.PLATFORM">
                         <a :href="app.PLATFORM" target="github"><i class="iconfont icon-shequ"></i><b>社区</b></a>
-                    </li>
+                    </li> 
 
                     <li>
-                        <a :href="app.CONTACT_URL"><i class="iconfont icon-contact"></i><b>求助</b></a>
-                    </li>
-
-                    <li>
-                        <span @click="app.shang()"><i class="iconfont icon-shang"></i><b>打赏</b></span>
+                        <span @click="app.help()"><i class="iconfont icon-contact"></i><b>求助</b></span>
                     </li>
                 </ul>
 
@@ -92,9 +88,9 @@
                     </button>
                 </p>
             </div>
- 
+
             <!-- 新增的忽略规则对话框 -->
-            <div id="ignore-rules-dialog"  style="display: none;"> 
+            <div id="ignore-rules-dialog" style="display: none;">
                 <div class="file-types pd-tb-20" id="ignore-rules-box">
                     <template x-for="(rule, index) in fileRules" :key="rule">
                         <span class="text">
@@ -196,7 +192,7 @@
                 <span class="id"></span>
                 <span class="name">规则</span>
                 <span class="remark"> 备注</span>
-                <span class="actions"></span>
+                <span class="actions"><i class="iconfont icon-filter" @click="showAddRuleDialog()"></i></span>
             </div>
             <ul>
                 <template x-for="(_rule, index) in rules" :key="index">
@@ -274,7 +270,7 @@
         </div>
 
         <div id="join-rule" style="display:none;">
-            <div class="ui-textarea"><span class="text">规则</span><textarea rows="4" id="rule" x-model="match_rule" placeholder="这里填写规则"></textarea></div>
+            <div class="ui-textarea"><span class="text">规则</span><textarea rows="4" id="rule" x-model="tempMatchRule" x-on:blur="match_rule = tempMatchRule;" placeholder="这里填写规则"></textarea></div>
             <div class="radios">
                 <span class="text">文件类型</span>
 
@@ -324,6 +320,36 @@
             </div>
         </div>
     </div>
+
+
+    <div class="ui-form" id="auth-key-box" style="display :none;">
+        <div class="ui-form-item">
+            <label class="ui-label">日期：</label>
+            <span class="ui-input ui-date-input"><input type="date" id="expirationDate" value=""></span>
+            
+        </div> 
+        <div class="ui-form-item mg-t-10"> 
+            <label class="ui-label"></label>
+            <span class="ui-input">
+                <span class="text cursor-pointer" @click="setExpirationDate(30)">1个月</span>
+                <span class="text cursor-pointer" @click="setExpirationDate(365)">1年</span>
+                <span class="text cursor-pointer" @click="setExpirationDate(7300)">20年</span>
+            </span>
+        </div>
+        <div class="ui-form-item mg-t-10">
+            <label class="ui-label">密码：</label>
+            <span class="ui-input"><input type="password" id="authPassword"></span>
+        </div>
+ 
+        <div class="ui-form-item mg-t-10"></div>
+            <label class="ui-label">机器码：</label>
+            <span class="ui-input ui-date-input"><input type="text" id="mid" value=""></span>
+        </div>
+    </div>
+
+
+ 
+
     <script src="./static/libs/lulu/theme/peak/js/plugin/jquery.js"></script>
     <script src="./static/libs/lulu/theme/peak/js/common/all.js"></script>
     <script src="./static/libs/dot/1.1.3/doT.min.js"></script>
@@ -348,6 +374,9 @@
     <script src="./static/libs/codemirror/6.65.7/addon/dialog/dialog.min.js"></script>
     <link href="./static/libs/codemirror/6.65.7/addon/dialog/dialog.min.css" rel="stylesheet">
 
+    <!-- 教程播放 -->
+    <script src="./static/libs/video.js/video.min.js"></script>
+
     <script src="./static/js/app.js"></script>
 
     <script>
@@ -360,7 +389,9 @@
             indentUnit: 4,
         });
 
+        
     </script>
+
 </body>
 
 </html>

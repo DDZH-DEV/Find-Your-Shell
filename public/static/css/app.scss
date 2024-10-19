@@ -194,7 +194,16 @@ h1.title {
     padding: 1%;
     height: 98%;
 }
+.ui-dialog{
+    min-width: 300px !important;
+}
+.ui-input input{
+    min-width: 160px !important;
+}
 
+.ui-textarea>textarea, textarea.ui-textarea{
+    min-width: 280px !important; 
+}
 .ui-dialog-body {
     // padding: 0 !important;
 }
@@ -266,10 +275,10 @@ h1.title {
 
     .actions {
         padding: 20px 0;
-
+        position: relative;
         div {
             margin-bottom: 10px;
-        }
+        }  
     }
     .rule_remark{
         padding-left: 50px;
@@ -365,7 +374,7 @@ h1.title {
 
     li, .li-nav {
         border-bottom: 1px dashed $solid-color;
-
+        position: relative;
         padding: 10px 0 5px 0;
         @extend .text;
 
@@ -411,6 +420,12 @@ h1.title {
             &.actions {
                 float: right;
                 margin-right: 20px;
+
+                .add-rule-btn{
+                    position: absolute;
+                    right: 5px;
+                    top:3px;
+                }
             }
         }
 
@@ -719,6 +734,14 @@ h1.title {
     }
 }
 
+.ui-date-input>input, .ui-date-range-input>input, .ui-hour-input>input, .ui-month-input>input, .ui-month-range-input>input, .ui-time-input>input, .ui-year-input>input{
+    padding-right: 22px !important;
+}
+
+#auth-key-box .ui-label{
+    display: inline-block;
+    width: 70px;
+}
 
 @import "response";
 

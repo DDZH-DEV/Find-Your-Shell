@@ -62,6 +62,7 @@ func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU() - 1)
 	libs.PrintIPs(port)
 	libs.LoadRules(db)
+
 	libs.StartHTTPServer(db, port)
 
 }

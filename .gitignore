@@ -7,3 +7,4 @@ last_scan.json
 *.txt
 findshell_linux
 findshell_windows.exe
+conf.db.back

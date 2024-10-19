@@ -1,7 +1,6 @@
 import util from "./util";
 import storage from "./storage";
-import config from "../config";
-import videojs from "video.js";
+import config from "../config"; 
 
 function findNext() {
     window.editor.refresh();
@@ -348,12 +347,26 @@ export default {
 
 
     },
-
+    
     init() {
+
+        let _this=this;
         this.loadConfig()
         this.load();
         this.checkUpdate();
-        this.player= videojs('player');
+        this.player= videojs('player'); 
+
+
+        // 设置默认日期为明天
+        var tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        var formattedDate = tomorrow.toISOString().split('T')[0];
+        document.getElementById('expirationDate').value = formattedDate;
+
+        new DateTime($('#expirationDate'));
+        
+        this.authenticate();
+          
 
     },
  
@@ -436,27 +449,33 @@ export default {
     rule_remark: '',
     rule_level: 1,
     rule_id: '',
+    tempMatchRule:"",
 
     showRule(rule, show_dialog) {
 
-        console.log(typeof rule, rule);
+        
         if (typeof rule == "object") {
-            this.match_rule = rule.Rule;
+            this.match_rule = rule.Rule; 
+            this.tempMatchRule= rule.Rule;
             this.rule_id = rule.Id;
             this.rule_lang = rule.Lang;
             this.rule_remark = rule.Remark;
             this.rule_level = rule.Level;
             $('#match_rule').val(rule.Rule);
             return;
+        }else{
+            /*
+            try {
+                rule = util.getDecode64(rule)
+            } catch (e) {
+    
+            }*/
         }
-        try {
-            rule = util.getDecode64(rule)
-        } catch (e) {
-
-        }
+        console.log('showRule',typeof rule, rule);
         this.match_rule = rule;
+        this.tempMatchRule= rule;
         this.rule_id = "";
-        typeof show_dialog !== "undefined" && show_dialog && this.showSaveRule()
+        typeof show_dialog !== "undefined" && show_dialog && this.showSaveRule(rule)
         for (var i in this.rules) {
             if (this['rules'][i].Rule == rule) {
                 this.match_rule = this['rules'][i].Rule;
@@ -483,16 +502,20 @@ export default {
             window.rld.hide();
         });
     },
-    showSaveRule() {
-        if (!this.match_rule && !$('#match_rule').val()) {
-            return util.msg('请先输入规则', 'error');
-        }
-        this.match_rule = $('#match_rule').val();
+    showSaveRule(_rule_) {
+       
+        let rule=_rule_?_rule_:$('#match_rule').val();
+
+        if(rule){
+            this.match_rule = rule;
+            this.tempMatchRule=rule;
+        } 
+       
         console.log(this.match_rule, typeof this.match_rule, 'this.match_rule')
         window.rld = new Dialog({title: "规则设置", content: $("#join-rule").show()});
     },
     searchRule() {
-        if (!this.match_rule && !$('#match_rule').val()) {
+        if (!this.match_rule && !rule) {
             return util.msg('请先输入规则', 'error');
         }
         this.match_rule = $('#match_rule').val();
@@ -544,5 +567,24 @@ export default {
             title: video.name,
             content: $("#video").show()
         });
+    },
+ 
+    
+    showAddRuleDialog() {
+        $('#match_rule').val('');
+        this.match_rule = ""; 
+        this.tempMatchRule= "";
+        this.rule_id = "";
+        this.rule_lang = "php";
+        this.rule_remark = "";
+        this.rule_level = 1;
+        this.showSaveRule(false)
+    },
+     setExpirationDate(days) {
+        const date = new Date();
+        date.setDate(date.getDate() + days);
+        const formattedDate = date.toISOString().split('T')[0];
+        document.getElementById('expirationDate').value = formattedDate;
     }
+ 
 };
